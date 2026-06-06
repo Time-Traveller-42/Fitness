@@ -1,11 +1,337 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head><style id="qw-theme">:root {
+  --color-bg: #f2f1f4;
+  --color-text: #352f3d;
+  --color-navbar-bg: #eae8ed;
+  --color-bg-chat-view: #fcfcfd;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #eae8ed;
+  --color-bg-hover: #dcdadf;
+  --color-surface: #eae8ed;
+  --color-surface-hover: #dcdadf;
+  --color-surface-active: #c1bec6;
+  --color-border: #c1bec6;
+  --color-border-light: #dcdadf;
+  --color-border-strong: #c1bec6;
+  --color-primary: #4200db;
+  --color-primary-dark: #35009e;
+  --color-primary-light: #8575ff;
+  --color-primary-bg: #e8e6ff;
+  --color-primary-hover-border: #35009e;
+  --color-nav-icon-active: #4200db;
+  --color-nav-hover-border: #4200db;
+  --color-primary-alpha-3: color-mix(in srgb, #4200db 3%, transparent);
+  --color-primary-alpha-5: color-mix(in srgb, #4200db 5%, transparent);
+  --color-primary-alpha-8: color-mix(in srgb, #4200db 8%, transparent);
+  --color-primary-alpha-12: color-mix(in srgb, #4200db 12%, transparent);
+  --color-primary-alpha-15: color-mix(in srgb, #4200db 15%, transparent);
+  --color-primary-alpha-20: color-mix(in srgb, #4200db 20%, transparent);
+  --color-primary-alpha-25: color-mix(in srgb, #4200db 25%, transparent);
+  --color-primary-alpha-30: color-mix(in srgb, #4200db 30%, transparent);
+  --color-primary-alpha-40: color-mix(in srgb, #4200db 40%, transparent);
+  --color-primary-alpha-50: color-mix(in srgb, #4200db 50%, transparent);
+  --color-primary-alpha-60: color-mix(in srgb, #4200db 60%, transparent);
+  --color-primary-subtle: color-mix(in srgb, #4200db 18%, transparent);
+  --color-primary-border: #8575ff;
+  --color-focus-ring: color-mix(in srgb, #4200db 50%, transparent);
+  --color-sidebar-hover: color-mix(in srgb, #4200db 12%, transparent);
+  --color-accent: #4200db;
+  --color-accent-foreground: #4200db;
+  --color-accent-dark: #35009e;
+  --color-accent-light: #e8e6ff;
+  --color-accent-inverse: #ffffff;
+  --color-link: #4200db;
+  --color-primary-gradient-end: #e8e6ff;
+  --color-primary-bg-solid: #eae8ed;
+  --color-user-bubble: #F3F3F7;
+  --color-text-secondary: #5e5966;
+  --color-text-tertiary: #7a7582;
+  --color-text-muted: #938f9b;
+  --color-text-on-primary: #f2f1f4;
+  --color-success: #00802f;
+  --color-success-dark: #00471e;
+  --color-success-light: #d9ffd6;
+  --color-success-hover: #005c26;
+  --color-success-bg: #e6f4eb;
+  --color-success-border: #c4dccb;
+  --color-success-foreground: #00802f;
+  --color-success-dark-foreground: #00471e;
+  --color-success-text: #00471e;
+  --color-error: #db0000;
+  --color-error-dark: #700000;
+  --color-error-light: #ffe0e0;
+  --color-error-hover: #ffe0e0;
+  --color-error-bg: #fbe9ea;
+  --color-error-border: #eecbcd;
+  --color-error-active-border: #db0000;
+  --color-error-foreground: #db0000;
+  --color-error-dark-foreground: #700000;
+  --color-error-inverse: #ffffff;
+  --color-error-text: #700000;
+  --color-warning: #f2b100;
+  --color-warning-dark: #573a00;
+  --color-warning-light: #fffbbd;
+  --color-warning-hover: #db9200;
+  --color-warning-bg: #fdf6e4;
+  --color-warning-border: #f5dda6;
+  --color-warning-foreground: #f2b100;
+  --color-warning-dark-foreground: #573a00;
+  --color-warning-inverse: #573a00;
+  --color-surface-warning: #fffbbd;
+  --color-text-warning: #573a00;
+  --color-info: #006ce0;
+  --color-info-dark: #002a66;
+  --color-info-light: #d1f1ff;
+  --color-info-hover: #003b8f;
+  --color-info-bg: #e6f0fb;
+  --color-info-border: #c0d5ec;
+  --color-info-foreground: #006ce0;
+  --color-info-dark-foreground: #002a66;
+  --color-info-inverse: #ffffff;
+  --color-overlay: #dcdadf80;
+  --color-shadow: #352f3d40;
+  --color-hover: #352f3d0d;
+  --color-tooltip-bg: #eae8ed;
+  --color-tooltip-text: #352f3d;
+  --color-voice-purple: #8575ff;
+  --color-voice-purple-dark: #4200db;
+  --color-voice-purple-light: #8575ff;
+  --color-voice-red: #db0000;
+  --color-voice-red-dark: #700000;
+  --color-voice-amber: #f2b100;
+  --color-voice-purple-glow: rgba(66, 0, 219, .4);
+  --color-voice-red-glow: rgba(219, 0, 0, .4);
+  --font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
+  --text-2xs: .5625rem;
+  --text-xs: .625rem;
+  --text-sm: .6875rem;
+  --text-base: .75rem;
+  --text-md: .8125rem;
+  --text-lg: .875rem;
+  --text-xl: 1rem;
+  --text-2xl: 1.125rem;
+  --text-3xl: 1.25rem;
+  --text-4xl: 1.5rem;
+  --text-5xl: 2rem;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-card: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 8px;
+  --shadow-sm: 0 1px 2px rgba(53, 47, 61, .06);
+  --shadow-md: 0 4px 12px rgba(53, 47, 61, .1);
+  --color-success-bg-solid: #d9ffd6;
+  --color-error-bg-solid: #ffe0e0;
+  --color-error-border-solid: #ffe0e0;
+  --color-warning-bg-solid: #fffbbd;
+  --color-warning-text: #573a00;
+  --color-info-bg-solid: #d1f1ff;
+  --color-info-bg-solid-alt: #d1f1ff;
+  --color-info-text: #002a66;
+  --color-info-text-alt: #002a66;
+  --color-emerald: #367c53;
+  --color-teal: #0c9aa7;
+  --color-code-bg: #eae8ed;
+  --color-code-header-bg: #dcdadf;
+  --color-code-text: #352f3d;
+  --color-code-border: #c1bec6;
+  --color-code-muted: #5e5966;
+  --color-inline-code-bg: #eae8ed;
+  --color-inline-code-text: #352f3d;
+  --color-inline-code-border: #c1bec6;
+  --color-scrollbar-thumb: #c1bec6;
+  --color-scrollbar-track: transparent;
+  --color-graph-node-text: #352f3d;
+  --color-graph-node-text-dim: #938f9b;
+  --color-graph-edge-default: #938f9b;
+  --color-graph-edge-cross: #d08025;
+  --color-graph-edge-text: #5e5966;
+  --color-graph-edge-stroke: #f2f1f4;
+  --color-graph-highlight-bg: #FF6B6B;
+  --color-graph-highlight-border: #E74C3C;
+  --color-graph-search-bg: #FFD700;
+  --color-graph-search-border: #FFA500;
+  --color-graph-focus-border: #C0392B;
+  --color-graph-external-border: #938f9b;
+  --color-graph-cat-file: #3878b0;
+  --color-graph-cat-folder: #5e5966;
+  --color-graph-cat-file-aggregate: #2d6a9f;
+  --color-graph-cat-class: #7138cc;
+  --color-graph-cat-function: #367c53;
+  --color-graph-cat-method: #0c9aa7;
+  --color-graph-cat-variable: #d08025;
+  --color-graph-cat-import: #b06a1a;
+  --color-graph-cat-module: #5e35a8;
+  --color-graph-cat-concept: #993333;
+  --color-graph-cat-person: #c44d4d;
+  --color-graph-cat-org: #0c9aa7;
+  --color-graph-cat-organization: #0c9aa7;
+  --color-graph-cat-product: #8e47ff;
+  --color-graph-cat-metric: #c44d78;
+  --color-graph-cat-location: #34495E;
+  --color-graph-cat-date: #b34d8a;
+  --color-graph-cat-code: #3878b0;
+  --color-graph-cat-doc: #5e5966;
+  --color-graph-cat-url: #367c53;
+  --color-graph-cat-email: #5e35a8;
+  --color-graph-cat-unknown: #938f9b;
+  --color-graph-rel-contains: #938f9b;
+  --color-graph-rel-extends: #7138cc;
+  --color-graph-rel-implements: #3878b0;
+  --color-graph-rel-imports: #d08025;
+  --color-graph-rel-uses: #367c53;
+  --color-graph-rel-calls: #367c53;
+  --color-graph-rel-references: #d08025;
+  --color-graph-rel-related-to: #938f9b;
+  --color-graph-rel-works-on: #993333;
+  --color-graph-rel-owns: #0c9aa7;
+  --color-graph-rel-depends-on: #b06a1a;
+  --color-graph-rel-parent-of: #938f9b;
+  --qs-content: #fff;
+  --qs-main: #fff;
+  --qs-primary-foreground: #131920;
+  --qs-secondary-foreground: #656871;
+  --qs-tertiary-foreground: #938f9b;
+  --qs-placeholder-foreground: #8c8c94;
+  --qs-divider: #dedee3;
+  --qs-default-border: #8c8c94;
+  --qs-neutral-soft: #b4b4bb;
+  --qs-neutral-gray-50: #eae8ed;
+  --qs-tertiary-background: #eae8ed;
+  --qs-action-hover: #f3f3f7;
+  --qs-primary-default: #4200db;
+  --qs-primary-dark: #35009e;
+  --qs-primary-light: #e8e6ff;
+  --qs-success-default: #00802f;
+  --qs-error-default: #db0000;
+  --qs-font-sans: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --qs-font-family: "Amazon Ember", "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+  --qs-font-base-letter-spacing: .15px;
+  --qs-shadow-sm: 0 0 2px 0 #00000029, 0 0 4px 0 #00000029;
+  --qs-shadow-md: 0 0 2px 0 #00000029, 0 2px 8px 1px #00000029;
+  --qs-shadow-lg: 0 4px 16px 4px #00000029, 0 2px 6px 1px #00000029;
+  --qs-shadow-xl: 0 4px 8px 2px #00000029, 0 6px 20px 4px #00000029;
+  --qs-width-modal-sm: 384px;
+  --qs-width-modal-md: 600px;
+  --qs-width-modal-lg: 1136px;
+  --qs-grid-gap: 16px;
+  --qs-grid-gap-xl: 24px;
+  --qs-primary-medium: #8575ff;
+  --qs-primary-inverse: #fff;
+  --qs-neutral-lightest: #f9f9fb;
+  --qs-neutral-light: #f3f3f7;
+  --qs-neutral-default: #dedee3;
+  --qs-neutral-medium: #8c8c94;
+  --qs-neutral-deep: #656871;
+  --qs-neutral-dark: #333843;
+  --qs-neutral-strong: #131920;
+  --qs-neutral-white: #fff;
+  --qs-neutral-black: #000;
+  --qs-success-medium: #005c26;
+  --qs-success-dark: #00471e;
+  --qs-success-light: #d9ffd6;
+  --qs-success-inverse: #fff;
+  --qs-info-default: #006ce0;
+  --qs-info-medium: #003b8f;
+  --qs-info-dark: #002a66;
+  --qs-info-light: #d1f1ff;
+  --qs-info-inverse: #fff;
+  --qs-warning-default: #f2b100;
+  --qs-warning-medium: #db9200;
+  --qs-warning-dark: #573a00;
+  --qs-warning-light: #fffbbd;
+  --qs-warning-inverse: #573a00;
+  --qs-warning-experimental: #f2b100;
+  --qs-warning-experimental-light: #fffbbd;
+  --qs-warning-experimental-light-foreground: #fffbbd;
+  --qs-error-medium: #900;
+  --qs-error-dark: #700000;
+  --qs-error-light: #ffe0e0;
+  --qs-error-inverse: #fff;
+  --qs-connection-default: #db3300;
+  --qs-connection-soft: #ff997a;
+  --qs-connection-light: #ffe0d6;
+  --qs-connection-dark: #661800;
+  --qs-automation-default: #b3008f;
+  --qs-automation-medium: #d600ba;
+  --qs-automation-soft: #ff94f1;
+  --qs-automation-light: #ffe0fb;
+  --qs-automation-dark: #660052;
+  --qs-insight-default: #a000b8;
+  --qs-insight-soft: #f299ff;
+  --qs-insight-light: #fce6ff;
+  --qs-insight-dark: #590066;
+  --qs-visualization-default: #7300e5;
+  --qs-visualization-soft: #d4a8ff;
+  --qs-visualization-light: #f2e5ff;
+  --qs-visualization-dark: #45008a;
+  --qs-spice: #ff9800;
+  --qs-coachmark: #006ce0;
+  --qs-brand: #fff;
+  --qs-brand-foreground: #131920;
+  --qs-brand-navbar: #131920;
+  --qs-brand-navbar-foreground: #fff;
+  --qs-brand-navbar-light: #dedee3;
+  --qs-brand-navbar-dark: #000;
+  --qs-application-navbar: #4200db;
+  --qs-application-navbar-foreground: #fff;
+  --qs-application-navbar-light: #e8e6ff;
+  --qs-application-navbar-dark: #35009e;
+  --qs-dimension: #4200db;
+  --qs-dimension-foreground: #fff;
+  --qs-dimension-experimental: #4200db;
+  --qs-dimension-experimental-foreground: #4200db;
+  --qs-measure: #00802f;
+  --qs-measure-foreground: #fff;
+  --qs-measure-experimental: #f2b100;
+  --qs-measure-experimental-foreground: #f2b100;
+  --qs-content-inverse: #333843;
+  --qs-content-inverse-active: #131920;
+  --qs-secondary: #dedee3;
+  --qs-disabled: #8c8c94;
+  --qs-divider-light: #f3f3f7;
+  --qs-hover-border: #333843;
+  --qs-active-border: #4200db;
+  --qs-disabled-border: #dedee3;
+  --qs-error-border: #ffe0e0;
+  --qs-error-active-border: #db0000;
+  --qs-disabled-foreground: #b4b4bb;
+  --qs-primary-inverse-foreground: #fff;
+  --qs-error-foreground: #db0000;
+  --qs-contrast-foreground: #131920;
+  --qs-main-foreground: #131920;
+  --qs-action-disabled: #f3f3f7;
+  --qs-action-active: #e8e6ff;
+  --qs-default-badge: #b4b4bb;
+  --qs-tag-default: #dedee3;
+  --qs-tag-soft-border: #b4b4bb;
+  --qs-focus-offset: 1px;
+  --qs-toggle-tile-sm: calc(.25rem * 8);
+  --qs-toggle-tile-md: calc(.25rem * 12);
+  --qs-toggle-tile-lg: calc(.25rem * 15);
+  --qs-shadow-pin-right: inset 4px 0 4px -4px #00000029;
+  --qs-shadow-pin-left: inset -4px 0 4px -4px #00000029;
+  --react-pdf-text-layer: 1;
+  --highlight-bg-color: rgba(180, 0, 170, 1);
+  --highlight-selected-bg-color: rgba(0, 100, 0, 1);
+  --react-pdf-annotation-layer: 1;
+  --annotation-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
+  --input-focus-border-color: Highlight;
+  --input-focus-outline: 1px solid Canvas;
+  --input-unfocused-border-color: transparent;
+  --input-disabled-border-color: transparent;
+  --input-hover-border-color: black;
+  --link-outline: none;
+  color-scheme: light;
+}
+body { background: var(--color-bg); color: var(--color-text); }
+a { color: var(--color-link, var(--color-primary)); }</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PSMF Kickstart Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="[REDACTED_CONN_STRING]://400;600;700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f7f4ef;
@@ -18,11 +344,13 @@
     --text: #1a1a18;
     --muted: #8a8479;
     --muted2: #6b6560;
+    --done-bg: #f4faf6;
+    --done-border: #7dc794;
     --font-display: 'Instrument Serif', Georgia, serif;
     --font-sans: 'Syne', sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--font-sans); min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-sans); min-height: 100vh; padding-bottom: 20px; }
 
   .header { background: var(--accent); padding: 28px 20px 24px; text-align: center; }
   .header h1 { font-family: var(--font-display); font-size: 32px; color: #fff; font-weight: 400; }
@@ -39,17 +367,14 @@
   /* OVERVIEW */
   .progress-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
   .progress-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 14px; }
-  .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-  .day-cell { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; border: 1.5px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; background: var(--bg); }
+  .day-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  .day-cell { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; border: 1.5px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; background: var(--bg); position: relative; }
   .day-cell:hover { border-color: var(--accent); }
   .day-cell.depletion { background: #e8f4ed; border-color: #a8d4b5; color: var(--accent); }
   .day-cell.carbup { background: #fdf0e0; border-color: #e8c484; color: var(--accent2); }
-  .day-cell.done { position: relative; }
-  .day-cell.done::after { content: '✓'; position: absolute; top: 2px; right: 4px; font-size: 8px; }
-  .day-cell.depletion.done::after { color: var(--accent); }
-  .day-cell.carbup.done::after { color: var(--accent2); }
   .day-cell .day-num { font-size: 14px; font-weight: 700; line-height: 1; }
   .day-cell .day-type { font-size: 8px; letter-spacing: 0.06em; margin-top: 2px; text-transform: uppercase; }
+  .day-cell .day-pct { font-size: 8px; opacity: 0.8; margin-top: 1px; }
 
   .legend { display: flex; gap: 16px; margin-top: 12px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted2); }
@@ -70,8 +395,6 @@
   .rule-icon { width: 20px; flex-shrink: 0; text-align: center; }
   .rule-text { color: var(--muted2); line-height: 1.5; }
   .rule-text strong { color: var(--text); font-weight: 600; }
-  .rule-warn { background: #fdf0e0; border: 1px solid #e8c484; border-radius: 8px; padding: 12px 14px; font-size: 12px; color: #7a4f1a; margin-top: 12px; line-height: 1.7; }
-  .rule-warn strong { font-weight: 600; }
 
   /* DAY DETAIL */
   .day-selector { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 20px; }
@@ -80,52 +403,75 @@
   .day-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .day-btn.carbup-btn { border-color: #e8c484; color: var(--accent2); }
   .day-btn.carbup-btn.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
-  .day-btn.done-btn { position: relative; }
-  .day-btn.done-btn::after { content: '·'; position: absolute; bottom: 3px; font-size: 14px; color: var(--accent); }
   .day-btn .d-num { font-size: 14px; line-height: 1; }
   .day-btn .d-type { font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; }
 
-  .day-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
-  .day-header-left h2 { font-family: var(--font-display); font-size: 22px; }
-  .day-header-left p { font-size: 11px; color: var(--muted); margin-top: 3px; }
-  .mark-done-btn { padding: 9px 16px; border-radius: 8px; font-family: var(--font-sans); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; border: 1.5px solid var(--accent); color: var(--accent); background: transparent; transition: all 0.15s; }
-  .mark-done-btn.done { background: var(--accent); color: #fff; }
+  .day-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; }
+  .day-header h2 { font-family: var(--font-display); font-size: 22px; }
+  .day-header .day-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .day-header .progress-bar { height: 5px; background: var(--border); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .day-header .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .day-header .progress-fill.dep { background: var(--accent); }
+  .day-header .progress-fill.carb { background: var(--accent2); }
 
-  .meal-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-  .meal-block-header { padding: 13px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-  .meal-block-header:hover { background: var(--surface2); }
-  .meal-block-title { font-size: 13px; font-weight: 600; }
-  .meal-block-time { font-size: 11px; color: var(--muted); }
-  .chevron { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
-  .chevron.open { transform: rotate(180deg); }
-  .meal-block-body { padding: 0 16px 14px; display: none; }
-  .meal-block-body.open { display: block; }
+  /* INLINE RULES */
+  .day-rules { background: #f0f7f2; border: 1px solid #c8e0cf; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .day-rules.carbup-rules { background: #fdf5e8; border-color: #e8c484; }
+  .day-rules-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .carbup-rules .day-rules-title { color: var(--accent2); }
+  .day-rule { font-size: 12px; color: #2d5a3d; line-height: 1.7; padding: 1px 0; }
+  .carbup-rules .day-rule { color: #7a4f1a; }
+
+  /* TRACKABLE ITEMS — meal blocks + task rows */
+  .track-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; border-left: 3px solid transparent; transition: all 0.2s; }
+  .track-item.done { background: var(--done-bg); border-left-color: var(--done-border); opacity: 0.7; }
+  .track-item.done .track-badge { opacity: 1; }
+
+  .track-header { padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+  .track-header { cursor: pointer; }
+  .track-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 11px; color: transparent; position: relative; z-index: 2; }
+  .track-check:hover { border-color: var(--accent); }
+  .track-item.done .track-check { background: var(--done-border); border-color: var(--done-border); color: #fff; }
+  .track-content { flex: 1; min-width: 0; }
+  .track-title { font-size: 13px; font-weight: 600; }
+  .track-time { font-size: 11px; color: var(--muted); }
+  .track-badge { font-size: 9px; background: var(--done-border); color: #fff; padding: 2px 6px; border-radius: 10px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
+  .track-expand { padding: 4px 8px; color: var(--muted); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
+  .track-expand.open { transform: rotate(180deg); }
+
+  .track-body { padding: 0 14px 14px 46px; display: none; }
+  .track-body.open { display: block; }
   .food-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .food-item:last-child { border-bottom: none; }
   .food-qty { color: var(--muted2); font-size: 11px; min-width: 90px; flex-shrink: 0; margin-top: 1px; }
   .food-name { color: var(--text); line-height: 1.4; }
   .food-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
-  .water-card { background: #eaf4fd; border: 1px solid #b8d8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-  .water-icon { font-size: 22px; }
-  .water-text { font-size: 13px; color: #1a4a6b; }
-  .water-text strong { font-weight: 600; }
-  .water-text small { display: block; font-size: 11px; color: #4a7a9b; margin-top: 2px; }
+  /* Simple task row (water, oil, restrictions) */
+  .task-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; padding: 11px 14px; display: flex; align-items: center; gap: 10px; border-left: 3px solid transparent; transition: all 0.2s; }
+  .task-row.done { background: var(--done-bg); border-left-color: var(--done-border); opacity: 0.7; }
+  .task-row.done .track-check { background: var(--done-border); border-color: var(--done-border); color: #fff; }
+  .task-row.done .task-badge { opacity: 1; }
+  .task-label { font-size: 13px; flex: 1; }
+  .task-badge { font-size: 9px; background: var(--done-border); color: #fff; padding: 2px 6px; border-radius: 10px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
 
-  .carbup-note { background: #fdf5e8; border: 1px solid #e8c484; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 12px; color: #7a4f1a; line-height: 1.7; }
-  .carbup-note strong { font-weight: 600; color: #5a3510; }
-
-  /* WEIGHT */
-  .weight-input-row { display: flex; gap: 10px; margin-bottom: 20px; }
-  .weight-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--font-sans); font-size: 14px; color: var(--text); outline: none; }
-  .weight-input:focus { border-color: var(--accent); }
+  /* BODY COMP */
+  .input-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .input-field { flex: 1; min-width: 100px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--font-sans); font-size: 14px; color: var(--text); outline: none; }
+  .input-field:focus { border-color: var(--accent); }
   .btn { padding: 12px 20px; background: var(--accent); border: none; border-radius: 8px; font-family: var(--font-sans); font-size: 12px; font-weight: 600; color: #fff; cursor: pointer; letter-spacing: 0.05em; }
-  .weight-chart { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .btn:hover { opacity: 0.9; }
+  .btn.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+
+  .weight-chart { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
   .chart-area { height: 120px; }
   .chart-svg { width: 100%; height: 100%; }
-  .weight-log-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .weight-log-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; gap: 8px; }
   .weight-log-row:last-child { border-bottom: none; }
-  .weight-log-date { color: var(--muted2); }
+  .weight-log-date { color: var(--muted2); min-width: 80px; }
+  .weight-log-val { font-weight: 600; }
+  .weight-log-bf { color: var(--accent2); font-size: 11px; }
+  .weight-log-delta { font-size: 11px; }
   .weight-log-delta.down { color: var(--accent); }
   .weight-log-delta.up { color: var(--accent3); }
   .weight-log-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; }
@@ -148,45 +494,32 @@
 <nav class="nav">
   <div class="nav-tab active" onclick="showPage('overview',this)">Overview</div>
   <div class="nav-tab" onclick="showPage('dayplan',this)">Day Plan</div>
-  <div class="nav-tab" onclick="showPage('rules',this)">Rules</div>
-  <div class="nav-tab" onclick="showPage('weight',this)">Weight</div>
+  <div class="nav-tab" onclick="showPage('body',this)">Body</div>
+  <div class="nav-tab" onclick="showPage('sync',this)">Sync</div>
 </nav>
 
 <!-- OVERVIEW -->
 <div class="page active" id="page-overview">
-
   <div class="stats-row" style="margin-top:4px">
-    <div class="stat-card">
-      <div class="stat-val" id="ov-days-done">0</div>
-      <div class="stat-lbl">Days done</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val amber" id="ov-days-left">12</div>
-      <div class="stat-lbl">Days left</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="ov-phase">Depletion</div>
-      <div class="stat-lbl">Current phase</div>
-    </div>
+    <div class="stat-card"><div class="stat-val" id="ov-days-done">0</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat-card"><div class="stat-val amber" id="ov-days-left">12</div><div class="stat-lbl">Remaining</div></div>
+    <div class="stat-card"><div class="stat-val" id="ov-phase">Depletion</div><div class="stat-lbl">Phase</div></div>
   </div>
-
   <div class="progress-wrap">
     <div class="progress-title">12-day progress</div>
     <div class="day-grid" id="overview-grid"></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot dep"></div>Depletion (Days 1–8)</div>
-      <div class="legend-item"><div class="legend-dot carb"></div>Carb-up (Days 9–12)</div>
+      <div class="legend-item"><div class="legend-dot dep"></div>Depletion (1–8)</div>
+      <div class="legend-item"><div class="legend-dot carb"></div>Carb-up (9–12)</div>
     </div>
   </div>
-
   <div class="rules-card">
     <div class="rules-title">Quick reminders</div>
-    <div class="rule-row"><div class="rule-icon">💧</div><div class="rule-text"><strong>Minimum 3L water every day</strong> — no exceptions, even on Day 12</div></div>
-    <div class="rule-row"><div class="rule-icon">🥛</div><div class="rule-text"><strong>Never skip curd</strong> — gut + urinary protection on high protein</div></div>
+    <div class="rule-row"><div class="rule-icon">💧</div><div class="rule-text"><strong>Minimum 3L water every day</strong> — no exceptions</div></div>
+    <div class="rule-row"><div class="rule-icon">🥛</div><div class="rule-text"><strong>Never skip curd</strong> — gut protection on high protein</div></div>
     <div class="rule-row"><div class="rule-icon">🍗</div><div class="rule-text">Measure chicken <strong>raw weight</strong>, not cooked</div></div>
     <div class="rule-row"><div class="rule-icon">🚫</div><div class="rule-text">Days 9–12 carb-up is <strong>not a binge</strong> — one carb source per meal</div></div>
-    <div class="rule-row"><div class="rule-icon">➡️</div><div class="rule-text">Day 13 = <strong>transition directly</strong> into the 1500 kcal main plan</div></div>
-    <div class="rule-warn"><strong>Learned from last time:</strong> The UTI/fever happened when curd was skipped + water dropped too low on the final day. This time water stays ≥ 3L throughout and curd is non-negotiable.</div>
+    <div class="rule-row"><div class="rule-icon">➡️</div><div class="rule-text">Day 13 = <strong>transition directly</strong> into 1500 kcal main plan</div></div>
   </div>
 </div>
 
@@ -196,87 +529,87 @@
   <div id="day-detail-area"></div>
 </div>
 
-<!-- RULES -->
-<div class="page" id="page-rules">
-  <div style="margin-bottom:20px">
-    <div class="section-label">General rules (all days)</div>
-    <div class="rules-card">
-      <div class="rule-row"><div class="rule-icon">💧</div><div class="rule-text"><strong>Water — Days 1–6:</strong> 4–5L/day · lemon + pinch salt in the morning</div></div>
-      <div class="rule-row"><div class="rule-icon">💧</div><div class="rule-text"><strong>Water — Day 7:</strong> 4L</div></div>
-      <div class="rule-row"><div class="rule-icon">💧</div><div class="rule-text"><strong>Water — Days 8–12:</strong> Minimum 3L (adjusted from original to prevent UTI)</div></div>
-      <div class="rule-row"><div class="rule-icon">🫒</div><div class="rule-text"><strong>Oil:</strong> Max 2 tsp/day total across all meals</div></div>
-      <div class="rule-row"><div class="rule-icon">🧂</div><div class="rule-text"><strong>Spices OK:</strong> Salt, pepper, chilli, turmeric, garam masala — don't go zero salt</div></div>
-      <div class="rule-row"><div class="rule-icon">☕</div><div class="rule-text"><strong>Drinks:</strong> Black coffee / tea allowed</div></div>
-    </div>
-
-    <div class="section-label" style="margin-top:20px">Avoid (days 1–8)</div>
-    <div class="rules-card">
-      <div class="rule-row"><div class="rule-icon">❌</div><div class="rule-text">Rice, roti, bread, sugar, fruits, milk, butter, cheese, fried food</div></div>
-      <div class="rule-row"><div class="rule-icon">❌</div><div class="rule-text">Any packaged or processed food</div></div>
-    </div>
-
-    <div class="section-label" style="margin-top:20px">Carb-up sources (days 9–12 only)</div>
-    <div class="rules-card">
-      <div class="rule-row"><div class="rule-icon">✅</div><div class="rule-text">Sweet potato · Brown rice · Oats (water cooked) · Banana · Apple</div></div>
-      <div class="rule-row"><div class="rule-icon">⚠️</div><div class="rule-text"><strong>ONE carb source per meal</strong> — not multiple combined</div></div>
-      <div class="rule-row"><div class="rule-icon">❌</div><div class="rule-text">No coconut water on Days 9–12</div></div>
-    </div>
-
-    <div class="section-label" style="margin-top:20px">Transition (day 13+)</div>
-    <div class="rules-card">
-      <div class="rule-row"><div class="rule-icon">➡️</div><div class="rule-text">Move straight into the 1500 kcal main plan. Have your tiffin prepped the night before Day 13.</div></div>
-      <div class="rule-row"><div class="rule-icon">⚖️</div><div class="rule-text">Weigh yourself on Day 1 morning and Day 13 morning for accurate before/after.</div></div>
-    </div>
+<!-- BODY -->
+<div class="page" id="page-body">
+  <div class="section-label" style="margin-top:4px">Log weight &amp; body fat</div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:14px">Weigh every morning before eating. Same time daily.</div>
+  <div class="input-row">
+    <input class="input-field" type="number" id="weight-input" placeholder="Weight (kg)" step="0.1" min="50" max="200">
+    <input class="input-field" type="number" id="bf-input" placeholder="BF%" step="0.1" min="3" max="60">
+    <button class="btn" onclick="logBody()">Log</button>
   </div>
+  <div class="weight-chart"><div class="section-label">Weight</div><div class="chart-area"><svg class="chart-svg" id="weight-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log at least 2 entries</text></svg></div></div>
+  <div class="weight-chart"><div class="section-label">Body fat %</div><div class="chart-area"><svg class="chart-svg" id="bf-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log BF% to see chart</text></svg></div></div>
+  <div id="body-log-list" style="margin-top:14px"></div>
 </div>
 
-<!-- WEIGHT -->
-<div class="page" id="page-weight">
-  <div class="section-label" style="margin-top:4px">Log weight</div>
-  <div style="font-size:12px;color:var(--muted2);margin-bottom:14px">Weigh every morning before eating. Same time daily for consistency.</div>
-  <div class="weight-input-row">
-    <input class="weight-input" type="number" id="weight-input" placeholder="Today's weight (kg)" step="0.1" min="50" max="200">
-    <button class="btn" onclick="logWeight()">Log</button>
+<!-- SYNC -->
+<div class="page" id="page-sync">
+  <div class="section-label" style="margin-top:4px">Cloud sync</div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:6px;line-height:1.7">
+    Choose a unique sync code to save your data to the cloud. Use the same code on another device to restore your progress.<br>
+    <strong>No account needed.</strong> Just remember your sync code.
   </div>
-  <div class="weight-chart">
-    <div class="section-label">Progress</div>
-    <div class="chart-area"><svg class="chart-svg" id="weight-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne, sans-serif">Log your weight to see progress</text></svg></div>
-    <div id="weight-log-list" style="margin-top:14px"></div>
+  <div class="input-row" style="margin-top:16px">
+    <input class="input-field" type="text" id="sync-code-input" placeholder="">
+  </div>
+  <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+    <button class="btn" onclick="syncPush()">Save to cloud ↑</button>
+    <button class="btn secondary" onclick="syncPull()">Load from cloud ↓</button>
+  </div>
+  <div id="sync-status" style="font-size:12px;color:var(--muted);padding:10px 0"></div>
+  <div style="margin-top:24px">
+    <div class="section-label">Local backup</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn secondary" onclick="exportData()">Export JSON</button>
+      <button class="btn secondary" onclick="document.getElementById('import-file').click()">Import JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
   </div>
 </div>
 
 <script>
-const SK = 'psmf_tracker_v1';
-function load() { try { return JSON.parse(localStorage.getItem(SK)) || {}; } catch { return {}; } }
-function save(d) { localStorage.setItem(SK, JSON.stringify(d)); }
+// localStorage shim
+var _storage = {};
+var _ls;
+try { _ls = window.localStorage; _ls.getItem('__test'); } catch(e) {
+  _ls = { getItem: function(k){ return _storage[k] || null; }, setItem: function(k,v){ _storage[k] = v; }, removeItem: function(k){ delete _storage[k]; } };
+}
+var SK = 'psmf_tracker_v3';
+function load() { try { return JSON.parse(_ls.getItem(SK)) || {}; } catch(e) { return {}; } }
+function save(d) { _ls.setItem(SK, JSON.stringify(d)); }
 
-const DAYS = Array.from({length:12}, (_,i) => i+1);
-const isDepDay = d => d <= 8;
-const isCarbDay = d => d >= 9;
+// Firebase - replace with your Realtime DB URL
+var FIREBASE_URL = 'https://YOUR-PROJECT-default-rtdb.firebaseio.com';
 
-const DEPLETION_MEALS = [
-  { title: 'Morning', time: '7:00 AM', items: [
+var DAYS = [1,2,3,4,5,6,7,8,9,10,11,12];
+function isDepDay(d) { return d <= 8; }
+function isCarbDay(d) { return d >= 9; }
+
+// ========== MEAL DATA ==========
+var DEPLETION_MEALS = [
+  { id: 'morning', title: 'Morning', time: '7:00 AM', items: [
     { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: 'Before anything else' }
   ]},
-  { title: 'Breakfast', time: '~7:15 AM', items: [
-    { qty: '2–3 whole', name: 'Eggs — scrambled', note: '' },
+  { id: 'breakfast', title: 'Breakfast', time: '~7:15 AM', items: [
+    { qty: '2\u20133 whole', name: 'Eggs \u2014 scrambled/boiled', note: '' },
     { qty: 'handful', name: 'Spinach / capsicum / small onion', note: '' },
-    { qty: '1 tsp', name: 'Oil', note: 'Counts toward 2 tsp daily limit' }
+    { qty: '1 tsp', name: 'Oil (counts toward 2 tsp daily limit)', note: '' }
   ]},
-  { title: 'Snack', time: '~10:30 AM', items: [
-    { qty: '150–200g', name: 'Hung curd', note: '⚠ Non-negotiable — gut + UTI protection' },
+  { id: 'snack', title: 'Snack \u2014 Curd', time: '~10:30 AM', items: [
+    { qty: '150\u2013200g', name: 'Hung curd', note: 'Non-negotiable \u2014 gut protection' },
     { qty: 'as desired', name: 'Cucumber OR cabbage', note: 'Salt + jeera + pepper' }
   ]},
-  { title: 'Lunch', time: '~1:00 PM', items: [
+  { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
     { qty: '300g raw', name: 'Chicken breast', note: 'Measure before cooking' },
     { qty: '200g+', name: 'Cabbage / cauliflower / beans / bottle gourd', note: '' },
-    { qty: '1 tsp', name: 'Oil', note: 'Counts toward 2 tsp daily limit' }
+    { qty: '1 tsp', name: 'Oil (counts toward 2 tsp daily limit)', note: '' }
   ]},
-  { title: 'Evening', time: '~5:00 PM', items: [
+  { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
     { qty: '150g', name: 'Chicken OR 150g hung curd', note: '' },
-    { qty: '1 small glass', name: 'Coconut water', note: 'Days 1–8 only' }
+    { qty: '1 small glass', name: 'Coconut water', note: 'Days 1\u20138 only' }
   ]},
-  { title: 'Dinner', time: '~8:00 PM', items: [
+  { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
     { qty: '300g raw', name: 'Chicken breast', note: 'Measure before cooking' },
     { qty: '200g+', name: 'Same vegetables as lunch', note: '' },
     { qty: '1 tsp', name: 'Oil (if remaining from daily limit)', note: '' }
@@ -284,242 +617,311 @@ const DEPLETION_MEALS = [
 ];
 
 function getCarbMeals(day) {
-  // Progressive carb increase over days 9-12
-  const carbAmounts = { 9: { sweet: '100g', rice: '½ cup cooked', snack_b: '1 banana OR 1 apple', eve: '1 apple OR ½ banana' },
-                         10: { sweet: '100g', rice: '½ cup cooked', snack_b: '1 banana OR 1 apple', eve: '1 apple OR ½ banana' },
-                         11: { sweet: '150g', rice: '¾ cup cooked', snack_b: '1 banana OR 1 apple', eve: '1 banana OR 1 apple' },
-                         12: { sweet: '200g', rice: '1 cup cooked', snack_b: '1 banana OR 1 apple', eve: '1 banana OR 1 apple' } };
-  const c = carbAmounts[day] || carbAmounts[9];
+  var c = { 9: { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple OR \u00bd banana' },
+    10: { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple OR \u00bd banana' },
+    11: { sweet:'150g', rice:'\u00be cup cooked', fruit:'1 banana OR 1 apple', eve:'1 banana OR 1 apple' },
+    12: { sweet:'200g', rice:'1 cup cooked', fruit:'1 banana OR 1 apple', eve:'1 banana OR 1 apple' }
+  }[day] || { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple' };
+
   return [
-    { title: 'Morning', time: '7:00 AM', items: [
+    { id: 'morning', title: 'Morning', time: '7:00 AM', items: [
       { qty: '200ml', name: 'Lemon water (minimal salt)', note: '' }
     ]},
-    { title: 'Breakfast', time: '~7:15 AM', items: [
-      { qty: '2–3 whole', name: 'Eggs + veggies', note: '' },
+    { id: 'breakfast', title: 'Breakfast', time: '~7:15 AM', items: [
+      { qty: '2\u20133 whole', name: 'Eggs + veggies', note: '' },
       { qty: c.sweet, name: 'Sweet potato OR 1 banana', note: 'ONE carb source only' }
     ]},
-    { title: 'Snack', time: '~10:30 AM', items: [
-      { qty: '150–200g', name: 'Hung curd + cucumber', note: '⚠ Non-negotiable' },
-      { qty: '', name: c.snack_b, note: 'ONE carb source' }
+    { id: 'snack', title: 'Snack \u2014 Curd', time: '~10:30 AM', items: [
+      { qty: '150\u2013200g', name: 'Hung curd + cucumber', note: 'Non-negotiable' },
+      { qty: '', name: c.fruit, note: 'ONE carb source' }
     ]},
-    { title: 'Lunch', time: '~1:00 PM', items: [
+    { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
       { qty: '300g raw', name: 'Chicken + veggies', note: '' },
       { qty: c.sweet + ' OR ' + c.rice, name: 'Sweet potato OR brown rice', note: 'ONE carb source only' }
     ]},
-    { title: 'Evening', time: '~5:00 PM', items: [
+    { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
       { qty: '150g', name: 'Chicken OR hung curd', note: '' },
-      { qty: '', name: c.eve, note: 'ONE carb source · no coconut water' }
+      { qty: '', name: c.eve, note: 'ONE carb source \u00b7 NO coconut water' }
     ]},
-    { title: 'Dinner', time: '~8:00 PM', items: [
+    { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
       { qty: '300g raw', name: 'Chicken + veggies', note: '' },
-      { qty: 'same as lunch', name: 'Same carb choice as lunch', note: 'Consistency matters' }
+      { qty: 'same as lunch', name: 'Same carb choice as lunch', note: '' }
     ]}
   ];
 }
 
-function getWaterRule(day) {
-  if (day <= 6) return { amount: '4–5 L', note: 'Lemon + pinch salt in morning glass' };
-  if (day === 7) return { amount: '4 L', note: 'Still generous — keep it up' };
-  return { amount: '≥ 3 L', note: 'Never drop below 3L — UTI prevention' };
+function getAllTaskIds(day) {
+  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  return meals.map(function(m){ return m.id; });
 }
 
-// OVERVIEW
+// ========== RULES PER DAY ==========
+function getRulesForDay(day) {
+  var rules = [];
+  if (day <= 6) {
+    rules.push('\u{1F4A7} Water: 4\u20135L \u00b7 lemon + salt in morning');
+    rules.push('\u{1F373} Oil: Max 2 tsp across all meals');
+    rules.push('\u{1F95B} Curd is non-negotiable');
+    rules.push('\u274C Avoid: rice, roti, bread, sugar, fruits, milk, butter, cheese, fried food');
+    rules.push('\u2705 Allowed: black coffee/tea, spices (salt, pepper, turmeric, chilli)');
+  } else if (day === 7) {
+    rules.push('\u{1F4A7} Water: 4L today');
+    rules.push('\u{1F373} Oil: Max 2 tsp');
+    rules.push('\u{1F95B} Curd is non-negotiable');
+    rules.push('\u274C Same restrictions as depletion');
+    rules.push('\u{1F3AF} Almost there \u2014 1 more depletion day after today');
+  } else if (day === 8) {
+    rules.push('\u{1F4A7} Water: \u22653L');
+    rules.push('\u{1F373} Oil: Max 2 tsp');
+    rules.push('\u{1F95B} Curd is non-negotiable');
+    rules.push('\u274C Still depletion \u2014 no carbs yet');
+    rules.push('\u2705 Tomorrow begins carb-up \u2014 not a binge');
+  } else {
+    rules.push('\u{1F4A7} Water: \u22653L \u2014 keep it up');
+    rules.push('\u{1F95B} Curd stays non-negotiable');
+    rules.push('\u26A0\uFE0F ONE carb source per meal \u2014 never combine');
+    rules.push('\u2705 Allowed carbs: Sweet potato \u00b7 Brown rice \u00b7 Oats \u00b7 Banana \u00b7 Apple');
+    rules.push('\u274C No coconut water during carb-up');
+    if (day === 9) rules.push('\u{1F4CA} Start gentle \u2014 small carb portions');
+    if (day === 10) rules.push('\u{1F4CA} Same as Day 9 \u2014 stay controlled');
+    if (day === 11) rules.push('\u{1F4CA} Slightly increase carb portion');
+    if (day === 12) { rules.push('\u{1F4CA} Full carb portions \u2014 last day'); rules.push('\u27A1\uFE0F Tomorrow: transition to 1500 kcal plan'); }
+  }
+  return rules;
+}
+
+// ========== OVERVIEW ==========
 function renderOverview() {
-  const data = load();
-  const done = data.doneDays || {};
-  const doneCount = Object.values(done).filter(Boolean).length;
+  var data = load();
+  var checks = data.checks || {};
+  var completeDays = 0;
+  DAYS.forEach(function(d) {
+    var ids = getAllTaskIds(d);
+    var dc = checks[d] || {};
+    if (ids.every(function(id){ return dc[id]; })) completeDays++;
+  });
+  document.getElementById('ov-days-done').textContent = completeDays;
+  document.getElementById('ov-days-left').textContent = Math.max(0, 12 - completeDays);
+  var nextDay = 13;
+  for (var i = 0; i < DAYS.length; i++) {
+    var ids = getAllTaskIds(DAYS[i]);
+    var dc = checks[DAYS[i]] || {};
+    if (!ids.every(function(id){ return dc[id]; })) { nextDay = DAYS[i]; break; }
+  }
+  document.getElementById('ov-phase').textContent = nextDay > 12 ? 'Done \u2713' : nextDay <= 8 ? 'Depletion' : 'Carb-up';
 
-  document.getElementById('ov-days-done').textContent = doneCount;
-  document.getElementById('ov-days-left').textContent = Math.max(0, 12 - doneCount);
-
-  // Phase
-  const nextDay = DAYS.find(d => !done[d]) || 13;
-  document.getElementById('ov-phase').textContent = nextDay > 12 ? 'Complete ✓' : nextDay <= 8 ? 'Depletion' : 'Carb-up';
-
-  const grid = document.getElementById('overview-grid');
-  grid.innerHTML = DAYS.map(d => {
-    const type = isDepDay(d) ? 'depletion' : 'carbup';
-    const label = isDepDay(d) ? 'dep' : 'carb';
-    const isDone = done[d];
-    return `<div class="day-cell ${type} ${isDone ? 'done' : ''}" onclick="goToDay(${d})">
-      <div class="day-num">${d}</div>
-      <div class="day-type">${label}</div>
-    </div>`;
+  var grid = document.getElementById('overview-grid');
+  grid.innerHTML = DAYS.map(function(d) {
+    var type = isDepDay(d) ? 'depletion' : 'carbup';
+    var ids = getAllTaskIds(d);
+    var dc = checks[d] || {};
+    var doneCount = ids.filter(function(id){ return dc[id]; }).length;
+    var pct = Math.round((doneCount / ids.length) * 100);
+    return '<div class="day-cell ' + type + '" onclick="goToDay(' + d + ')">' +
+      '<div class="day-num">' + d + '</div>' +
+      '<div class="day-type">' + (isDepDay(d) ? 'dep' : 'carb') + '</div>' +
+      '<div class="day-pct">' + (pct > 0 ? pct + '%' : '\u00b7') + '</div></div>';
   }).join('');
 }
 
 function goToDay(d) {
-  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', i===1));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(function(t,i){ t.classList.toggle('active', i===1); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById('page-dayplan').classList.add('active');
   renderDayPlan(d);
 }
 
-// DAY PLAN
-let currentDay = 1;
+// ========== DAY PLAN ==========
+var currentDay = 1;
 
 function renderDaySelector(activeDay) {
-  const data = load();
-  const done = data.doneDays || {};
-  const sel = document.getElementById('day-selector');
-  sel.innerHTML = DAYS.map(d => {
-    const isCarbBtn = isCarbDay(d);
-    const isDone = done[d];
-    return `<div class="day-btn ${isCarbBtn ? 'carbup-btn' : ''} ${isDone ? 'done-btn' : ''} ${d === activeDay ? 'active' : ''}" onclick="renderDayPlan(${d})">
-      <div class="d-num">${d}</div>
-      <div class="d-type">${isDepDay(d) ? 'dep' : 'carb'}</div>
-    </div>`;
+  var data = load();
+  var checks = data.checks || {};
+  var sel = document.getElementById('day-selector');
+  sel.innerHTML = DAYS.map(function(d) {
+    var ids = getAllTaskIds(d);
+    var dc = checks[d] || {};
+    var allDone = ids.every(function(id){ return dc[id]; });
+    return '<div class="day-btn ' + (isCarbDay(d) ? 'carbup-btn' : '') + ' ' + (d === activeDay ? 'active' : '') + '" onclick="renderDayPlan(' + d + ')" style="' + (allDone ? 'opacity:0.6' : '') + '">' +
+      '<div class="d-num">' + d + '</div><div class="d-type">' + (isDepDay(d) ? 'dep' : 'carb') + '</div></div>';
   }).join('');
 }
 
 function renderDayPlan(day) {
   currentDay = day;
   renderDaySelector(day);
+  var data = load();
+  var checks = data.checks || {};
+  var dc = checks[day] || {};
+  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  var allIds = getAllTaskIds(day);
+  var doneCount = allIds.filter(function(id){ return dc[id]; }).length;
+  var pct = Math.round((doneCount / allIds.length) * 100);
+  var rules = getRulesForDay(day);
+  var phaseLabel = isDepDay(day) ? 'Strict depletion' : 'Controlled carb-up';
+  var area = document.getElementById('day-detail-area');
 
-  const data = load();
-  const done = (data.doneDays || {})[day];
-  const meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
-  const water = getWaterRule(day);
-  const phaseLabel = isDepDay(day) ? 'Strict depletion' : 'Controlled carb-up';
-  const area = document.getElementById('day-detail-area');
+  var html = '';
 
-  let html = `
-    <div class="day-header">
-      <div class="day-header-left">
-        <h2>Day ${day}</h2>
-        <p>${phaseLabel}${isDepDay(day) ? '' : ' · carb target 150–180g'}</p>
-      </div>
-      <button class="mark-done-btn ${done ? 'done' : ''}" onclick="markDone(${day})">${done ? '✓ Done' : 'Mark done'}</button>
-    </div>`;
+  // Header + progress
+  html += '<div class="day-header"><h2>Day ' + day + '</h2>';
+  html += '<div class="day-sub">' + phaseLabel + ' \u00b7 ' + doneCount + '/' + allIds.length + ' done</div>';
+  html += '<div class="progress-bar"><div class="progress-fill ' + (isDepDay(day)?'dep':'carb') + '" style="width:' + pct + '%"></div></div></div>';
 
-  if (isCarbDay(day)) {
-    html += `<div class="carbup-note"><strong>Carb-up rules for today:</strong><br>
-      · Protein stays the same as depletion days<br>
-      · ONE carb source per meal — never combine<br>
-      · No coconut water<br>
-      · This is not a cheat day — stay in control</div>`;
-  }
+  // Rules inline
+  html += '<div class="day-rules ' + (isCarbDay(day)?'carbup-rules':'') + '">';
+  html += '<div class="day-rules-title">' + (isDepDay(day) ? '\u{1F7E2} Day ' + day + ' rules' : '\u{1F7E0} Day ' + day + ' rules') + '</div>';
+  rules.forEach(function(r){ html += '<div class="day-rule">' + r + '</div>'; });
+  html += '</div>';
 
-  html += `<div class="water-card">
-    <div class="water-icon">💧</div>
-    <div class="water-text"><strong>${water.amount} water today</strong><small>${water.note}</small></div>
-  </div>`;
-
-  meals.forEach((meal, mi) => {
-    html += `<div class="meal-block">
-      <div class="meal-block-header" onclick="toggleMealBlock(this)">
-        <div class="meal-block-title">${meal.title}</div>
-        <div style="display:flex;align-items:center;gap:8px"><div class="meal-block-time">${meal.time}</div><div class="chevron">▾</div></div>
-      </div>
-      <div class="meal-block-body ${mi === 0 ? 'open' : ''}">
-        ${meal.items.map(item => `
-          <div class="food-item">
-            <div class="food-qty">${item.qty}</div>
-            <div><div class="food-name">${item.name}</div>${item.note ? `<div class="food-note">${item.note}</div>` : ''}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
+  // Meal blocks as trackable items
+  meals.forEach(function(meal) {
+    var done = dc[meal.id];
+    html += '<div class="track-item ' + (done ? 'done' : '') + '">';
+    html += '<div class="track-header" onclick="toggleExpand(this)">';
+    html += '<div class="track-check" onclick="event.stopPropagation();toggleTask(' + day + ',\'' + meal.id + '\')">' + (done ? '\u2713' : '') + '</div>';
+    html += '<div class="track-content"><div class="track-title">' + meal.title + '</div><div class="track-time">' + meal.time + '</div></div>';
+    html += '<div class="track-badge">\u2713 done</div>';
+    html += '<div class="track-expand">\u25BE</div>';
+    html += '</div>';
+    html += '<div class="track-body">';
+    meal.items.forEach(function(item) {
+      html += '<div class="food-item"><div class="food-qty">' + item.qty + '</div><div><div class="food-name">' + item.name + '</div>';
+      if (item.note) html += '<div class="food-note">' + item.note + '</div>';
+      html += '</div></div>';
+    });
+    html += '</div></div>';
   });
 
   area.innerHTML = html;
-  // Reopen first chevron
-  const firstChevron = area.querySelector('.chevron');
-  if (firstChevron) firstChevron.classList.add('open');
 }
 
-function toggleMealBlock(header) {
-  const body = header.nextElementSibling;
-  const chevron = header.querySelector('.chevron');
+function toggleExpand(header) {
+  var body = header.nextElementSibling;
   body.classList.toggle('open');
-  chevron.classList.toggle('open');
+  var chevron = header.querySelector('.track-expand');
+  if (chevron) chevron.classList.toggle('open');
 }
 
-function markDone(day) {
-  const data = load();
-  if (!data.doneDays) data.doneDays = {};
-  data.doneDays[day] = !data.doneDays[day];
+function toggleTask(day, taskId) {
+  var data = load();
+  if (!data.checks) data.checks = {};
+  if (!data.checks[day]) data.checks[day] = {};
+  data.checks[day][taskId] = !data.checks[day][taskId];
   save(data);
-  renderDaySelector(day);
-  renderOverview();
-  // Update button
-  const btn = document.querySelector('.mark-done-btn');
-  if (btn) {
-    btn.classList.toggle('done', data.doneDays[day]);
-    btn.textContent = data.doneDays[day] ? '✓ Done' : 'Mark done';
+
+  // Update this item in-place without re-rendering (preserves expand state)
+  var item = document.getElementById('track-' + taskId);
+  if (item) {
+    var done = data.checks[day][taskId];
+    item.classList.toggle('done', done);
+    var check = item.querySelector('.track-check');
+    if (check) check.textContent = done ? '\u2713' : '';
   }
+
+  // Update progress bar in header
+  var allIds = getAllTaskIds(day);
+  var dc = data.checks[day] || {};
+  var doneCount = allIds.filter(function(id){ return dc[id]; }).length;
+  var pct = Math.round((doneCount / allIds.length) * 100);
+  var fill = document.querySelector('.progress-fill');
+  if (fill) fill.style.width = pct + '%';
+  var sub = document.querySelector('.day-sub');
+  if (sub) sub.textContent = (isDepDay(day) ? 'Strict depletion' : 'Controlled carb-up') + ' \u00b7 ' + doneCount + '/' + allIds.length + ' done';
+
+  renderOverview();
 }
 
-// WEIGHT
-function logWeight() {
-  const val = parseFloat(document.getElementById('weight-input').value);
-  if (!val || val < 40 || val > 250) return;
-  const data = load();
-  if (!data.weights) data.weights = [];
-  const today = new Date().toISOString().split('T')[0];
-  data.weights = data.weights.filter(w => w.date !== today);
-  data.weights.push({ date: today, kg: val });
-  data.weights.sort((a,b) => a.date.localeCompare(b.date));
+// ========== BODY ==========
+function logBody() {
+  var wVal = parseFloat(document.getElementById('weight-input').value);
+  var bfVal = parseFloat(document.getElementById('bf-input').value);
+  if (!wVal || wVal < 40 || wVal > 250) return;
+  var data = load();
+  if (!data.body) data.body = [];
+  var today = new Date().toISOString().split('T')[0];
+  data.body = data.body.filter(function(e){ return e.date !== today; });
+  var entry = { date: today, kg: wVal };
+  if (bfVal && bfVal >= 3 && bfVal <= 60) entry.bf = bfVal;
+  data.body.push(entry);
+  data.body.sort(function(a,b){ return a.date.localeCompare(b.date); });
   save(data);
   document.getElementById('weight-input').value = '';
-  renderWeights();
+  document.getElementById('bf-input').value = '';
+  renderBody();
 }
 
-function renderWeights() {
-  const data = load();
-  const weights = data.weights || [];
-  const svg = document.getElementById('weight-svg');
-
-  if (weights.length < 2) {
-    svg.innerHTML = `<text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log at least 2 entries to see chart</text>`;
-  } else {
-    const vals = weights.map(w => w.kg);
-    const minV = Math.min(...vals) - 0.5, maxV = Math.max(...vals) + 0.5;
-    const W = 560, H = 100, PX = 12, PY = 10;
-    const px = i => PX + (i / (weights.length - 1)) * (W - PX * 2);
-    const py = v => PY + (1 - (v - minV) / (maxV - minV)) * (H - PY * 2);
-    const path = weights.map((w,i) => (i===0?'M':'L') + px(i).toFixed(1) + ' ' + py(w.kg).toFixed(1)).join(' ');
-    const dots = weights.map((w,i) => `<circle cx="${px(i).toFixed(1)}" cy="${py(w.kg).toFixed(1)}" r="3" fill="#2d5a3d"/>`).join('');
-    const labels = weights.length <= 12 ? weights.map((w,i) => `<text x="${px(i).toFixed(1)}" y="${(py(w.kg)-6).toFixed(1)}" text-anchor="middle" fill="#8a8479" font-size="9" font-family="Syne,sans-serif">${w.kg}</text>`).join('') : '';
-    svg.innerHTML = `<path d="${path}" fill="none" stroke="#2d5a3d" stroke-width="1.5"/>${dots}${labels}`;
+function renderBody() {
+  var data = load();
+  var entries = data.body || [];
+  renderChart('weight-svg', entries.map(function(e){ return e.kg; }), '#2d5a3d');
+  var bfEntries = entries.filter(function(e){ return e.bf; });
+  renderChart('bf-svg', bfEntries.map(function(e){ return e.bf; }), '#c17f3a');
+  var list = document.getElementById('body-log-list');
+  if (!entries.length) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#8a8479;font-size:12px">No entries yet</div>'; return; }
+  var reversed = entries.slice().reverse().slice(0, 14);
+  var rows = '';
+  for (var i = 0; i < reversed.length; i++) {
+    var e = reversed[i]; var prev = reversed[i+1]; var delta = '';
+    if (prev) { var diff = (e.kg - prev.kg).toFixed(1); delta = '<span class="weight-log-delta ' + (diff<=0?'down':'up') + '">' + (diff>0?'+':'') + diff + '</span>'; }
+    rows += '<div class="weight-log-row"><span class="weight-log-date">' + e.date + '</span><span class="weight-log-val">' + e.kg + ' kg</span><span class="weight-log-bf">' + (e.bf ? e.bf+'%' : '\u2014') + '</span>' + delta + '<button class="weight-log-del" onclick="delBody(\'' + e.date + '\')">\u00D7</button></div>';
   }
-
-  const list = document.getElementById('weight-log-list');
-  if (!weights.length) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#8a8479;font-size:12px">No entries yet</div>'; return; }
-  list.innerHTML = [...weights].reverse().slice(0,12).map((w,i,arr) => {
-    const prev = arr[i+1];
-    let delta = '';
-    if (prev) {
-      const diff = (w.kg - prev.kg).toFixed(1);
-      delta = `<span class="weight-log-delta ${diff<=0?'down':'up'}">${diff>0?'+':''}${diff} kg</span>`;
-    }
-    return `<div class="weight-log-row">
-      <span class="weight-log-date">${w.date}</span>
-      <span style="font-weight:600">${w.kg} kg</span>
-      ${delta}
-      <button class="weight-log-del" onclick="delWeight('${w.date}')">×</button>
-    </div>`;
-  }).join('');
+  list.innerHTML = '<div class="section-label">Log history</div>' + rows;
 }
 
-function delWeight(date) {
-  const data = load();
-  data.weights = (data.weights||[]).filter(w => w.date !== date);
-  save(data);
-  renderWeights();
+function renderChart(svgId, vals, color) {
+  var svg = document.getElementById(svgId);
+  if (vals.length < 2) { svg.innerHTML = '<text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log at least 2 entries</text>'; return; }
+  var minV = Math.min.apply(null,vals)-0.5, maxV = Math.max.apply(null,vals)+0.5;
+  var W=560, H=100, PX=12, PY=10;
+  function px(i){ return PX+(i/(vals.length-1))*(W-PX*2); }
+  function py(v){ return PY+(1-(v-minV)/(maxV-minV))*(H-PY*2); }
+  var path='', dots='', labels='';
+  for(var i=0;i<vals.length;i++){
+    path += (i===0?'M':'L')+px(i).toFixed(1)+' '+py(vals[i]).toFixed(1);
+    dots += '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(vals[i]).toFixed(1)+'" r="3" fill="'+color+'"/>';
+    if(vals.length<=14) labels += '<text x="'+px(i).toFixed(1)+'" y="'+(py(vals[i])-7).toFixed(1)+'" text-anchor="middle" fill="#8a8479" font-size="9" font-family="Syne,sans-serif">'+vals[i]+'</text>';
+  }
+  svg.innerHTML = '<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="1.5"/>'+dots+labels;
 }
 
+function delBody(date) { var data=load(); data.body=(data.body||[]).filter(function(e){return e.date!==date;}); save(data); renderBody(); }
+
+// ========== SYNC ==========
+function syncPush() {
+  var code = document.getElementById('sync-code-input').value.trim();
+  if (!code) { showSyncStatus('\u26A0\uFE0F Enter a sync code first'); return; }
+  showSyncStatus('Saving...');
+  fetch(FIREBASE_URL+'/users/'+encodeURIComponent(code)+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:load(),updated:new Date().toISOString()})})
+  .then(function(r){if(r.ok)showSyncStatus('\u2705 Saved \u2014 '+new Date().toLocaleTimeString());else showSyncStatus('\u274C Failed');})
+  .catch(function(e){showSyncStatus('\u274C '+e.message);});
+}
+function syncPull() {
+  var code = document.getElementById('sync-code-input').value.trim();
+  if (!code) { showSyncStatus('\u26A0\uFE0F Enter a sync code first'); return; }
+  showSyncStatus('Loading...');
+  fetch(FIREBASE_URL+'/users/'+encodeURIComponent(code)+'.json')
+  .then(function(r){return r.json();})
+  .then(function(result){if(!result||!result.data){showSyncStatus('\u26A0\uFE0F No data for this code');return;} save(result.data); showSyncStatus('\u2705 Loaded (saved: '+(result.updated||'unknown')+')'); renderAll();})
+  .catch(function(e){showSyncStatus('\u274C '+e.message);});
+}
+function showSyncStatus(msg){document.getElementById('sync-status').textContent=msg;}
+
+function exportData(){var blob=new Blob([JSON.stringify(load(),null,2)],{type:'application/json'});var u=URL.createObjectURL(blob);var a=document.createElement('a');a.href=u;a.download='psmf-backup.json';a.click();URL.revokeObjectURL(u);}
+function importData(event){var f=event.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{save(JSON.parse(e.target.result));renderAll();showSyncStatus('\u2705 Imported');}catch(err){showSyncStatus('\u274C Invalid file');}};r.readAsText(f);}
+
+// ========== NAV ==========
 function showPage(name, tab) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('page-'+name).classList.add('active');
   tab.classList.add('active');
-  if (name === 'dayplan') renderDayPlan(currentDay);
+  if(name==='dayplan')renderDayPlan(currentDay);
+  if(name==='body')renderBody();
 }
-
-// INIT
-renderOverview();
-renderDayPlan(1);
-renderWeights();
+function renderAll(){renderOverview();renderDayPlan(currentDay);renderBody();}
+renderAll();
 </script>
-</body>
-</html>
+
+
+</body></html>
