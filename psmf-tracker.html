@@ -488,7 +488,7 @@ a { color: var(--color-link, var(--color-primary)); }</style>
 
 <div class="header">
   <h1>PSMF <em>Kickstart</em></h1>
-  <p>12-day protocol · depletion + carb-up</p>
+  <p>12-day protocol · 9 depletion + 3 carb-up</p>
 </div>
 
 <nav class="nav">
@@ -509,8 +509,8 @@ a { color: var(--color-link, var(--color-primary)); }</style>
     <div class="progress-title">12-day progress</div>
     <div class="day-grid" id="overview-grid"></div>
     <div class="legend">
-      <div class="legend-item"><div class="legend-dot dep"></div>Depletion (1–8)</div>
-      <div class="legend-item"><div class="legend-dot carb"></div>Carb-up (9–12)</div>
+      <div class="legend-item"><div class="legend-dot dep"></div>Depletion (1–9)</div>
+      <div class="legend-item"><div class="legend-dot carb"></div>Carb-up (10–12)</div>
     </div>
   </div>
   <div class="rules-card">
@@ -583,69 +583,59 @@ function save(d) { _ls.setItem(SK, JSON.stringify(d)); }
 var FIREBASE_URL = 'https://YOUR-PROJECT-default-rtdb.firebaseio.com';
 
 var DAYS = [1,2,3,4,5,6,7,8,9,10,11,12];
-function isDepDay(d) { return d <= 8; }
-function isCarbDay(d) { return d >= 9; }
+function isDepDay(d) { return d <= 9; }
+function isCarbDay(d) { return d >= 10; }
 
 // ========== MEAL DATA ==========
 var DEPLETION_MEALS = [
-  { id: 'morning', title: 'Morning', time: '7:00 AM', items: [
-    { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: 'Before anything else' }
+  { id: 'morning', title: 'Morning — Lemon Water', time: '6:30 AM', items: [
+    { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: 'First thing, before anything else' }
   ]},
-  { id: 'breakfast', title: 'Breakfast', time: '~7:15 AM', items: [
-    { qty: '2\u20133 whole', name: 'Eggs \u2014 scrambled/boiled', note: '' },
-    { qty: 'handful', name: 'Spinach / capsicum / small onion', note: '' },
-    { qty: '1 tsp', name: 'Oil (counts toward 2 tsp daily limit)', note: '' }
+  { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
+    { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled (minimal oil)', note: '' },
+    { qty: '100\u2013150g', name: 'Vegetables \u2014 spinach / capsicum / onion', note: '' }
   ]},
-  { id: 'snack', title: 'Snack \u2014 Curd', time: '~10:30 AM', items: [
-    { qty: '150\u2013200g', name: 'Hung curd', note: 'Non-negotiable \u2014 gut protection' },
-    { qty: 'as desired', name: 'Cucumber OR cabbage', note: 'Salt + jeera + pepper' }
+  { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
+    { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable \u2014 gut protection on high protein' },
+    { qty: 'optional', name: 'Cucumber with salt + pepper', note: '' }
   ]},
   { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-    { qty: '300g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '200g+', name: 'Cabbage / cauliflower / beans / bottle gourd', note: '' },
-    { qty: '1 tsp', name: 'Oil (counts toward 2 tsp daily limit)', note: '' }
+    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
+    { qty: '150\u2013200g', name: 'Vegetables \u2014 cabbage / cauliflower / beans / bottle gourd', note: '' }
   ]},
   { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-    { qty: '150g', name: 'Chicken OR 150g hung curd', note: '' },
-    { qty: '1 small glass', name: 'Coconut water', note: 'Days 1\u20138 only' }
+    { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: 'Either works \u2014 pick what you have' }
   ]},
   { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-    { qty: '300g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '200g+', name: 'Same vegetables as lunch', note: '' },
-    { qty: '1 tsp', name: 'Oil (if remaining from daily limit)', note: '' }
+    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
+    { qty: '150\u2013200g', name: 'Vegetables \u2014 same as lunch', note: '' }
   ]}
 ];
 
 function getCarbMeals(day) {
-  var c = { 9: { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple OR \u00bd banana' },
-    10: { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple OR \u00bd banana' },
-    11: { sweet:'150g', rice:'\u00be cup cooked', fruit:'1 banana OR 1 apple', eve:'1 banana OR 1 apple' },
-    12: { sweet:'200g', rice:'1 cup cooked', fruit:'1 banana OR 1 apple', eve:'1 banana OR 1 apple' }
-  }[day] || { sweet:'100g', rice:'\u00bd cup cooked', fruit:'1 banana OR 1 apple', eve:'1 apple' };
-
+  var rice = day <= 11 ? '100g cooked' : '120g cooked';
   return [
-    { id: 'morning', title: 'Morning', time: '7:00 AM', items: [
-      { qty: '200ml', name: 'Lemon water (minimal salt)', note: '' }
+    { id: 'morning', title: 'Morning \u2014 Lemon Water', time: '6:30 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: '' }
     ]},
-    { id: 'breakfast', title: 'Breakfast', time: '~7:15 AM', items: [
-      { qty: '2\u20133 whole', name: 'Eggs + veggies', note: '' },
-      { qty: c.sweet, name: 'Sweet potato OR 1 banana', note: 'ONE carb source only' }
+    { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
+      { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled', note: '' },
+      { qty: '100\u2013150g', name: 'Vegetables', note: '' }
     ]},
-    { id: 'snack', title: 'Snack \u2014 Curd', time: '~10:30 AM', items: [
-      { qty: '150\u2013200g', name: 'Hung curd + cucumber', note: 'Non-negotiable' },
-      { qty: '', name: c.fruit, note: 'ONE carb source' }
+    { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
+      { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable' },
+      { qty: 'optional', name: 'Cucumber', note: '' }
     ]},
     { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-      { qty: '300g raw', name: 'Chicken + veggies', note: '' },
-      { qty: c.sweet + ' OR ' + c.rice, name: 'Sweet potato OR brown rice', note: 'ONE carb source only' }
+      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
+      { qty: rice, name: 'Cooked rice', note: 'White or brown' }
     ]},
     { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-      { qty: '150g', name: 'Chicken OR hung curd', note: '' },
-      { qty: '', name: c.eve, note: 'ONE carb source \u00b7 NO coconut water' }
+      { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: '' }
     ]},
     { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-      { qty: '300g raw', name: 'Chicken + veggies', note: '' },
-      { qty: 'same as lunch', name: 'Same carb choice as lunch', note: '' }
+      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
+      { qty: rice, name: 'Cooked rice', note: 'Same as lunch' }
     ]}
   ];
 }
@@ -658,34 +648,21 @@ function getAllTaskIds(day) {
 // ========== RULES PER DAY ==========
 function getRulesForDay(day) {
   var rules = [];
-  if (day <= 6) {
-    rules.push('\u{1F4A7} Water: 4\u20135L \u00b7 lemon + salt in morning');
-    rules.push('\u{1F373} Oil: Max 2 tsp across all meals');
+  if (day <= 9) {
+    rules.push('\u{1F4A7} Water: 3L today \u00b7 lemon + salt in morning');
     rules.push('\u{1F95B} Curd is non-negotiable');
     rules.push('\u274C Avoid: rice, roti, bread, sugar, fruits, milk, butter, cheese, fried food');
-    rules.push('\u2705 Allowed: black coffee/tea, spices (salt, pepper, turmeric, chilli)');
-  } else if (day === 7) {
-    rules.push('\u{1F4A7} Water: 4L today');
-    rules.push('\u{1F373} Oil: Max 2 tsp');
-    rules.push('\u{1F95B} Curd is non-negotiable');
-    rules.push('\u274C Same restrictions as depletion');
-    rules.push('\u{1F3AF} Almost there \u2014 1 more depletion day after today');
-  } else if (day === 8) {
-    rules.push('\u{1F4A7} Water: \u22653L');
-    rules.push('\u{1F373} Oil: Max 2 tsp');
-    rules.push('\u{1F95B} Curd is non-negotiable');
-    rules.push('\u274C Still depletion \u2014 no carbs yet');
-    rules.push('\u2705 Tomorrow begins carb-up \u2014 not a binge');
+    rules.push('\u2705 Allowed: black coffee/tea (no sugar), all spices, minimal oil');
+    if (day >= 7) rules.push('\u{1F3AF} ' + (9 - day) + ' depletion day' + (9-day>1?'s':'') + ' remaining');
+    if (day === 9) rules.push('\u2705 Tomorrow you add rice \u2014 not a binge, just 100g at lunch & dinner');
   } else {
-    rules.push('\u{1F4A7} Water: \u22653L \u2014 keep it up');
+    rules.push('\u{1F4A7} Water: 3L \u2014 keep it up');
     rules.push('\u{1F95B} Curd stays non-negotiable');
-    rules.push('\u26A0\uFE0F ONE carb source per meal \u2014 never combine');
-    rules.push('\u2705 Allowed carbs: Sweet potato \u00b7 Brown rice \u00b7 Oats \u00b7 Banana \u00b7 Apple');
-    rules.push('\u274C No coconut water during carb-up');
-    if (day === 9) rules.push('\u{1F4CA} Start gentle \u2014 small carb portions');
-    if (day === 10) rules.push('\u{1F4CA} Same as Day 9 \u2014 stay controlled');
-    if (day === 11) rules.push('\u{1F4CA} Slightly increase carb portion');
-    if (day === 12) { rules.push('\u{1F4CA} Full carb portions \u2014 last day'); rules.push('\u27A1\uFE0F Tomorrow: transition to 1500 kcal plan'); }
+    rules.push('\u2705 Same meals as depletion + rice at lunch & dinner');
+    rules.push('\u26A0\uFE0F Rice only \u2014 no roti/bread/sweets/fruits yet');
+    if (day === 10) rules.push('\u{1F4CA} Day 10: 100g cooked rice at lunch & dinner');
+    if (day === 11) rules.push('\u{1F4CA} Day 11: 100g cooked rice at lunch & dinner');
+    if (day === 12) { rules.push('\u{1F4CA} Day 12: 120g cooked rice \u2014 last day of protocol'); rules.push('\u27A1\uFE0F Day 13: transition directly to 1500 kcal plan. No celebration binge.'); }
   }
   return rules;
 }
