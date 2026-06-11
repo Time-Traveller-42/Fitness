@@ -447,6 +447,13 @@ a { color: var(--color-link, var(--color-primary)); }</style>
   .food-name { color: var(--text); line-height: 1.4; }
   .food-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
 
+  /* PREP CARD */
+  .prep-card { background: #f9f7f3; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
+  .prep-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  .prep-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .prep-item:last-child { border-bottom: none; }
+  .prep-qty { color: var(--muted2); font-size: 12px; }
+
   /* Simple task row (water, oil, restrictions) */
   .task-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; padding: 11px 14px; display: flex; align-items: center; gap: 10px; border-left: 3px solid transparent; transition: all 0.2s; }
   .task-row.done { background: var(--done-bg); border-left-color: var(--done-border); opacity: 0.7; }
@@ -640,6 +647,25 @@ function getCarbMeals(day) {
   ];
 }
 
+// ========== PREP / INGREDIENTS FOR NEXT DAY ==========
+function getIngredientsForDay(day) {
+  if (day > 12) return []; // no next day
+  var items = [];
+  items.push({ name: 'Lemon', qty: '1' });
+  items.push({ name: 'Eggs', qty: '3' });
+  items.push({ name: 'Chicken breast (raw)', qty: '500g' });
+  items.push({ name: 'Curd / Hung curd', qty: '300\u2013350g' });
+  items.push({ name: 'Vegetables (spinach/capsicum/onion)', qty: '100\u2013150g' });
+  items.push({ name: 'Vegetables (cabbage/cauliflower/beans)', qty: '300\u2013400g' });
+  items.push({ name: 'Cucumber', qty: '1 small' });
+  items.push({ name: 'Salt, pepper, spices', qty: 'as needed' });
+  if (isCarbDay(day)) {
+    var riceQty = day <= 11 ? '200g cooked (measure for lunch + dinner)' : '240g cooked';
+    items.push({ name: 'Rice (white or brown)', qty: riceQty });
+  }
+  return items;
+}
+
 function getAllTaskIds(day) {
   var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
   return meals.map(function(m){ return m.id; });
@@ -769,6 +795,20 @@ function renderDayPlan(day) {
     });
     html += '</div></div>';
   });
+
+  // Prep for tomorrow
+  var nextDay = day + 1;
+  if (nextDay <= 12) {
+    var ingredients = getIngredientsForDay(nextDay);
+    html += '<div class="prep-card">';
+    html += '<div class="prep-title">\u{1F6D2} Prep for Day ' + nextDay + ' (tomorrow)</div>';
+    ingredients.forEach(function(item) {
+      html += '<div class="prep-item"><span>' + item.name + '</span><span class="prep-qty">' + item.qty + '</span></div>';
+    });
+    html += '</div>';
+  } else if (day === 12) {
+    html += '<div class="prep-card"><div class="prep-title">\u{1F3C1} Protocol complete!</div><div style="font-size:13px;color:var(--muted2);line-height:1.6">Tomorrow (Day 13): transition directly into 1500 kcal plan.<br>Do not celebrate with a binge. You earned this \u2014 protect it.</div></div>';
+  }
 
   area.innerHTML = html;
 }
