@@ -123,6 +123,23 @@
   .food-qty { color: var(--muted2); font-size: 11px; min-width: 90px; flex-shrink: 0; margin-top: 1px; }
   .food-name { color: var(--text); line-height: 1.4; }
   .food-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  /* RECIPE SECTION */
+  .recipe-toggle { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 6px 12px; background: #f0ece4; border: 1px solid var(--border); border-radius: 8px; font-size: 11px; color: var(--muted2); cursor: pointer; font-family: var(--font-sans); letter-spacing: 0.04em; -webkit-tap-highlight-color: transparent; user-select: none; transition: all 0.15s; }
+  .recipe-toggle:active { background: #e5e0d6; }
+  .recipe-toggle .recipe-chevron { transition: transform 0.2s; font-size: 9px; }
+  .recipe-toggle.open .recipe-chevron { transform: rotate(180deg); }
+  .recipe-body { display: none; margin-top: 10px; padding: 12px; background: #faf8f5; border: 1px solid var(--border); border-radius: 10px; }
+  .recipe-body.open { display: block; }
+  .recipe-name { font-family: var(--font-display); font-size: 17px; color: var(--text); margin-bottom: 2px; }
+  .recipe-time { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .recipe-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 6px; font-weight: 600; }
+  .recipe-ingredients { margin-bottom: 12px; }
+  .recipe-ingredients li { font-size: 12px; color: var(--text); padding: 2px 0; list-style: none; position: relative; padding-left: 14px; }
+  .recipe-ingredients li::before { content: '\2022'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .recipe-steps { counter-reset: step; }
+  .recipe-steps li { font-size: 12px; color: var(--text); padding: 5px 0; list-style: none; position: relative; padding-left: 26px; border-bottom: 1px solid #eee; line-height: 1.5; }
+  .recipe-steps li:last-child { border-bottom: none; }
+  .recipe-steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 
   /* PREP CARD */
   .prep-card { background: #f9f7f3; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
@@ -139,7 +156,7 @@
   .task-label { font-size: 13px; flex: 1; }
   .task-badge { font-size: 9px; background: var(--done-border); color: #fff; padding: 2px 6px; border-radius: 10px; opacity: 0; transition: opacity 0.2s; flex-shrink: 0; }
 
-  /* BODY COMP */
+  /* FORM CONTROLS (used by Sync) */
   .input-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
   .input-field { flex: 1; min-width: 100px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-family: var(--font-sans); font-size: 14px; color: var(--text); outline: none; }
   .input-field:focus { border-color: var(--accent); }
@@ -147,25 +164,28 @@
   .btn:hover { opacity: 0.9; }
   .btn.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
 
+  .section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* COOKING NOTE */
+  .cooking-note { background: #fff8f0; border: 1px solid #e8c484; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .cooking-note-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+  .cooking-note-text { font-size: 12px; color: #7a4f1a; line-height: 1.6; }
+  .cooking-note-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); font-weight: 600; margin-bottom: 4px; }
+
+  /* BODY TAB */
   .weight-chart { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 14px; }
-  .chart-area { height: 120px; }
-  .chart-svg { width: 100%; height: 100%; }
   .weight-log-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; gap: 8px; }
-  .weight-log-row:last-child { border-bottom: none; }
   .weight-log-date { color: var(--muted2); min-width: 80px; }
   .weight-log-val { font-weight: 600; }
   .weight-log-bf { color: var(--accent2); font-size: 11px; }
   .weight-log-delta { font-size: 11px; }
   .weight-log-delta.down { color: var(--accent); }
   .weight-log-delta.up { color: var(--accent3); }
-  .weight-log-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; }
-  .weight-log-del:hover { color: var(--accent3); }
-
-  .section-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .weight-log-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -203,7 +223,7 @@
   </div>
   <div class="rules-card">
     <div class="rules-title">Quick reminders</div>
-    <div class="rule-row"><div class="rule-icon">&#128167;</div><div class="rule-text"><strong>Minimum 3L water every day</strong> &mdash; no exceptions</div></div>
+    <div class="rule-row"><div class="rule-icon">&#128167;</div><div class="rule-text"><strong>Minimal water morning</strong> &mdash; avoid washroom mid-commute. Spread 3L from 10 AM onwards.</div></div>
     <div class="rule-row"><div class="rule-icon">&#129371;</div><div class="rule-text"><strong>Never skip curd</strong> &mdash; gut protection on high protein</div></div>
     <div class="rule-row"><div class="rule-icon">&#127831;</div><div class="rule-text">Measure chicken <strong>raw weight</strong>, not cooked</div></div>
     <div class="rule-row"><div class="rule-icon">&#128683;</div><div class="rule-text">Days 9&ndash;12 carb-up is <strong>not a binge</strong> &mdash; one carb source per meal</div></div>
@@ -217,57 +237,20 @@
   <div id="day-detail-area"></div>
 </div>
 
-<!-- BODY -->
+<!-- SYNC -->
 <div class="page" id="page-body">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;margin-bottom:12px">
-    <div class="section-label" style="margin:0">Body composition</div>
-    <button class="btn secondary" onclick="document.getElementById('ocr-file').click()" style="font-size:11px;padding:7px 14px;border-radius:20px">Scan screenshot</button>
-    <input type="file" id="ocr-file" accept="image/*" style="display:none" onchange="ocrImport(event)">
+  <div class="section-label" style="margin-top:4px">Log weight & body fat</div>
+  <div style="font-size:12px;color:var(--muted2);margin-bottom:14px">Weigh every morning before eating. Same time daily.</div>
+  <div class="input-row">
+    <input class="input-field" type="number" id="weight-input" placeholder="Weight (kg)" step="0.1" min="50" max="200">
+    <input class="input-field" type="number" id="bf-input" placeholder="BF%" step="0.1" min="3" max="60">
+    <button class="btn" onclick="logBody()">Log</button>
   </div>
-  <div id="ocr-status" style="display:none;background:#eaf4fd;border:1px solid #b8d8f0;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:12px;color:#1a4a6b"></div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px">
-    <div style="margin-bottom:10px">
-      <input class="input-field" type="date" id="date-input" style="width:100%;font-size:13px" title="Date of this weigh-in">
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">Weight (kg)</div>
-        <input class="input-field" type="number" id="weight-input" placeholder="90.75" step="0.01" min="50" max="200" style="width:100%">
-      </div>
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">Body fat %</div>
-        <input class="input-field" type="number" id="bf-input" placeholder="29.9" step="0.1" min="3" max="60" style="width:100%">
-      </div>
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">Body fat (kg)</div>
-        <input class="input-field" type="number" id="bfkg-input" placeholder="26.9" step="0.1" min="3" max="80" style="width:100%">
-      </div>
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">Visceral fat</div>
-        <input class="input-field" type="number" id="vfi-input" placeholder="12" step="1" min="1" max="30" style="width:100%">
-      </div>
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">Lean body mass (kg)</div>
-        <input class="input-field" type="number" id="lbm-input" placeholder="63.1" step="0.1" min="20" max="120" style="width:100%">
-      </div>
-      <div>
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:4px;padding-left:2px">BMR (kcal)</div>
-        <input class="input-field" type="number" id="bmr-input" placeholder="1733" step="1" min="800" max="3000" style="width:100%">
-      </div>
-    </div>
-    <button class="btn" onclick="logBody()" style="width:100%;border-radius:8px;padding:13px;font-size:13px">Log entry</button>
-  </div>
-  <div class="weight-chart"><div class="section-label">Weight</div><div class="chart-area"><svg class="chart-svg" id="weight-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log at least 2 entries</text></svg></div></div>
-  <div class="weight-chart"><div class="section-label">Body fat %</div><div class="chart-area"><svg class="chart-svg" id="bf-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log BF% to see chart</text></svg></div></div>
-  <div class="weight-chart"><div class="section-label">Body fat (kg)</div><div class="chart-area"><svg class="chart-svg" id="bfkg-svg" viewBox="0 0 580 110" preserveAspectRatio="none"><text x="290" y="60" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log body fat kg to see chart</text></svg></div></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-    <div class="weight-chart"><div class="section-label">Visceral fat</div><div class="chart-area" style="height:80px"><svg class="chart-svg" id="vfi-svg" viewBox="0 0 580 80" preserveAspectRatio="none"><text x="290" y="45" text-anchor="middle" fill="#8a8479" font-size="11" font-family="Syne,sans-serif">Log VFI</text></svg></div></div>
-    <div class="weight-chart"><div class="section-label">Lean body mass</div><div class="chart-area" style="height:80px"><svg class="chart-svg" id="lbm-svg" viewBox="0 0 580 80" preserveAspectRatio="none"><text x="290" y="45" text-anchor="middle" fill="#8a8479" font-size="11" font-family="Syne,sans-serif">Log LBM</text></svg></div></div>
-  </div>
+  <div class="weight-chart"><div class="section-label">Weight</div><div class="chart-container"><svg id="weight-svg" viewBox="0 0 320 100" style="width:100%;height:100px"><text x="160" y="55" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log weight to see chart</text></svg></div></div>
+  <div class="weight-chart"><div class="section-label">Body fat %</div><div class="chart-container"><svg id="bf-svg" viewBox="0 0 320 100" style="width:100%;height:100px"><text x="160" y="55" text-anchor="middle" fill="#8a8479" font-size="12" font-family="Syne,sans-serif">Log BF% to see chart</text></svg></div></div>
   <div id="body-log-list" style="margin-top:14px"></div>
 </div>
 
-<!-- SYNC -->
 <div class="page" id="page-sync">
   <div class="section-label" style="margin-top:4px">Cloud sync</div>
   <div style="font-size:12px;color:var(--muted2);margin-bottom:6px;line-height:1.7">
@@ -348,93 +331,483 @@ function isDepDay(d) { return d <= 9; }
 function isCarbDay(d) { return d >= 10; }
 
 // ========== MEAL DATA ==========
-var DEPLETION_MEALS = [
-  { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
-    { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: 'First thing' },
-    { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
-  ]},
-  { id: 'walk', title: 'Evening Walk', time: '~5:00 PM', items: [
-    { qty: '20\u201330 min', name: 'Light walk only', note: 'After reaching home \u2014 no intense exercise on PSMF' }
-  ]},
-  { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
-    { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled (minimal oil)', note: '' },
-    { qty: '100\u2013150g', name: 'Vegetables \u2014 spinach / capsicum / onion', note: '' }
-  ]},
-  { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
-    { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable \u2014 gut protection on high protein' }
-  ]},
-  { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '150\u2013200g', name: 'Vegetables \u2014 cabbage / cauliflower / beans / bottle gourd', note: '' }
-  ]},
-  { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-    { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: 'Either works \u2014 pick what you have' }
-  ]},
-  { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '150\u2013200g', name: 'Vegetables \u2014 same as lunch', note: '' }
-  ]},
-  { id: 'bedtime', title: 'Before Bed', time: '~10:00 PM', items: [
-    { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
-  ]}
-];
 
-function getCarbMeals(day) {
-  var rice = day <= 11 ? '100g cooked' : '120g cooked';
-  return [
+// Cooking notes per rotation day
+var COOKING_NOTES = {
+  1: "Burner 1: Chicken curry + cauliflower (15 min). Burner 2: Egg bhurji (5 min). Start chicken first.",
+  2: "Burner 1: Pepper chicken + beans (15 min). Burner 2: Paneer bhurji (7 min).",
+  3: "Burner 1: Chicken keema + cabbage (15 min). Burner 2: Shakshuka eggs (7 min).",
+  4: "Burner 1: Chicken stir fry + bottle gourd (12 min). Burner 2: Egg keema (10 min). Also sear paneer tikka bites for office snack (3 min on same pan after eggs).",
+  5: "Burner 1: Chicken do pyaza + veggies (20 min). Burner 2: Masala omelette (5 min).",
+  6: "Burner 1: Jeera chicken + veggies (15 min). Burner 2: Egg-paneer scramble (5 min)."
+};
+
+// 6-day rotation meals (PSMF-compatible)
+var ROTATION_MEALS = {
+  1: [
     { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
-      { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: '' },
-      { qty: '1 tsp in warm water', name: 'Ajwain water', note: '10 min after lemon water' }
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
     ]},
-    { id: 'walk', title: 'Evening Walk', time: '~5:00 PM', items: [
-      { qty: '20\u201330 min', name: 'Light walk only', note: 'After reaching home' }
-    ]},
-    { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
-      { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled', note: '' },
-      { qty: '100\u2013150g', name: 'Vegetables', note: '' }
-    ]},
-    { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
-      { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable' }
-    ]},
-    { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
-      { qty: rice, name: 'Cooked rice', note: 'White or brown' }
-    ]},
-    { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-      { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: '' }
-    ]},
-    { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
-      { qty: rice, name: 'Cooked rice', note: 'Same as lunch' }
-    ]},
-    { id: 'bedtime', title: 'Before Bed', time: '~10:00 PM', items: [
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Egg Bhurji', note: '5 min cook' }
+    ], recipe: {
+      name: 'Egg Bhurji',
+      cookTime: '5 min',
+      ingredients: ['3 eggs', '1 small onion (chopped fine)', '1 green chilli (slit)', '\u00bc tsp turmeric', '1 tsp oil', 'Salt to taste', 'Fresh coriander (optional)'],
+      steps: ['Heat 1 tsp oil in a pan on medium.', 'Add chopped onion, saut\u00e9 1 min till soft.', 'Add slit green chilli, turmeric, salt.', 'Crack 3 eggs directly into pan, stir immediately with spatula.', 'Keep stirring/scrambling for 2 min until eggs are set but still soft.', 'Garnish with coriander. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Spiced Curd',
+      cookTime: '2 min (no cook)',
+      ingredients: ['200g fresh curd', '\u00bd tsp roasted cumin powder', '\u00bc tsp black salt', 'Pinch of red chilli powder (optional)'],
+      steps: ['Take 200g curd in a dabba/container.', 'Add roasted cumin, black salt, and chilli powder.', 'Mix well. Cover and refrigerate till you leave.', 'Eat at 10:30 AM at office \u2014 no heating needed.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Curry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Cauliflower', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Curry + Cauliflower',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed)', '1 medium onion (sliced)', '1 medium tomato (chopped)', '1 tsp oil', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g cauliflower florets', 'Water as needed'],
+      steps: ['Heat 1 tsp oil in pressure cooker/pan on medium.', 'Add sliced onion, cook 2 min till translucent.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chopped tomato, turmeric, chilli powder, salt. Cook 2 min till tomato softens.', 'Add 250g chicken cubes. Stir to coat in masala.', 'Add \u00bd cup water, cover. Pressure cook 2 whistles OR simmer 10 min.', 'Meanwhile, microwave or boil 150g cauliflower florets (3 min).', 'Add garam masala to chicken, stir. Pack in dabba with cauliflower on the side.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '150g', name: 'Paneer Bhurji', note: '7 min cook' }
+    ], recipe: {
+      name: 'Paneer Bhurji',
+      cookTime: '7 min',
+      ingredients: ['150g paneer (crumbled by hand)', '1 small onion (chopped fine)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Minimal oil or dry pan', 'Salt to taste'],
+      steps: ['Heat a pan on medium (dry or tiny oil).', 'Add chopped onion, saut\u00e9 2 min.', 'Add turmeric, chilli powder, salt.', 'Add crumbled paneer, mix well.', 'Toss for 3-4 min on medium heat till paneer is warm and lightly golden.', 'Serve immediately.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Curry', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Curry + Veggies',
+      cookTime: '15 min',
+      ingredients: ['3 eggs', '1 medium onion (chopped)', '1 medium tomato (chopped)', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g mixed vegetables', 'Water'],
+      steps: ['Boil 3 eggs (10 min). Peel, slit each egg with 2 cuts.', 'Heat a pan, add chopped onion. Dry saut\u00e9 2 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli powder, salt. Cook 2-3 min.', 'Add \u00bd cup water. Bring to simmer.', 'Slide in boiled eggs. Simmer 5 min, spooning gravy over eggs.', 'Finish with garam masala.', 'Steam/boil 150g veggies separately (3 min). Serve alongside.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Warm Spiced Curd', note: '' }
+    ], recipe: {
+      name: 'Warm Spiced Curd',
+      cookTime: '2 min',
+      ingredients: ['100g curd', '\u00bc tsp turmeric', 'Pinch of black pepper'],
+      steps: ['Take 100g curd in a bowl.', 'Microwave 20 sec (just to take the chill off, not hot).', 'Stir in turmeric and pepper. Eat slowly.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
       { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
     ]}
-  ];
+  ],
+  2: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '200g', name: 'Paneer Bhurji', note: '7 min cook' }
+    ], recipe: {
+      name: 'Paneer Bhurji',
+      cookTime: '7 min',
+      ingredients: ['200g paneer (crumbled)', '1 small onion (chopped)', '1 green chilli (chopped)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Salt to taste', 'Minimal oil'],
+      steps: ['Heat pan on medium, add tiny oil.', 'Saut\u00e9 onion + green chilli 2 min.', 'Add turmeric, chilli powder, salt.', 'Add crumbled paneer. Toss 4-5 min on medium-high.', 'Some pieces should get light golden spots. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Curd Tadka', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Curd Tadka',
+      cookTime: '3 min',
+      ingredients: ['200g curd', '1 tsp oil', '\u00bd tsp mustard seeds', '5-6 curry leaves', 'Pinch of hing (asafoetida)', 'Salt to taste'],
+      steps: ['Heat 1 tsp oil in a tiny pan.', 'Add mustard seeds. Wait for splutter (15 sec).', 'Add curry leaves + hing. Turn off heat.', 'Pour this tadka over 200g curd in a dabba.', 'Mix, cover, carry to office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Pepper Chicken Dry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Beans', note: 'Side' }
+    ], recipe: {
+      name: 'Pepper Chicken Dry + Beans',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed small)', '1 tbsp crushed black pepper', '8-10 curry leaves', '4 cloves garlic (sliced)', '1 small onion (sliced)', '\u00bd tsp turmeric', 'Salt to taste', '150g beans (chopped)'],
+      steps: ['Heat a pan on high. No oil needed if using non-stick.', 'Add chicken cubes. Sear without stirring for 2 min (let it brown).', 'Flip, add sliced garlic + curry leaves. Fry 1 min.', 'Add onion, turmeric, salt. Toss 3-4 min.', 'Add crushed pepper generously. Toss 2 more min till chicken is cooked and dry.', 'Boil/microwave 150g chopped beans (3 min). Pack both in dabba.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '3 eggs', name: 'Masala Egg Fry', note: '10 min' }
+    ], recipe: {
+      name: 'Masala Egg Fry',
+      cookTime: '10 min',
+      ingredients: ['3 eggs', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', 'Salt to taste', 'Pinch of black pepper'],
+      steps: ['Boil 3 eggs (8-10 min). Peel, halve lengthwise.', 'Heat a dry non-stick pan on medium.', 'Place egg halves cut-side down. Let them sear 1-2 min (slight golden crust).', 'Flip, sprinkle chilli powder, turmeric, salt, pepper over them.', 'Toss gently 1 min. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '250g raw', name: 'Chicken Palak', note: '18 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Palak + Veggies',
+      cookTime: '18 min',
+      ingredients: ['250g chicken breast (cubed)', '100g spinach (washed, roughly chopped)', '4 cloves garlic (minced)', '1 small onion (chopped)', '\u00bd tsp turmeric', '\u00bd tsp garam masala', 'Salt to taste', '150g vegetables'],
+      steps: ['Heat pan on medium. Dry saut\u00e9 onion 2 min.', 'Add garlic, cook 30 sec.', 'Add chicken + turmeric + salt. Cook 5 min, stirring.', 'Add chopped spinach. It will wilt down quickly.', 'Add \u00bc cup water. Cover, simmer 8-10 min till chicken is done.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '50g', name: 'Paneer in Warm Turmeric Water', note: 'Hot water drink' }
+    ], recipe: {
+      name: 'Paneer Turmeric Water',
+      cookTime: '2 min',
+      ingredients: ['50g paneer (small cubes)', '1 cup hot water', '\u00bc tsp turmeric', 'Pinch of black pepper'],
+      steps: ['Boil 1 cup water.', 'Drop in paneer cubes, turmeric, pepper.', 'Let sit 1 min. Sip the water, eat the paneer.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  3: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Shakshuka-Style Eggs', note: '7 min cook' }
+    ], recipe: {
+      name: 'Shakshuka-Style Eggs',
+      cookTime: '7 min',
+      ingredients: ['3 eggs', '\u00bd capsicum (chopped)', '1 small onion (chopped)', '1 medium tomato (chopped)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Salt to taste', '1 tsp oil'],
+      steps: ['Heat 1 tsp oil in a wide pan on medium.', 'Add onion + capsicum. Saut\u00e9 2 min.', 'Add tomato, turmeric, chilli, salt. Cook 2 min till tomato is soft and saucy.', 'Make 3 small wells in the mixture. Crack 1 egg into each.', 'Cover with lid. Cook 3 min till egg whites are set, yolks still slightly soft.', 'Eat directly from pan (or slide onto plate).']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Hung Curd + Roasted Jeera', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Hung Curd Snack',
+      cookTime: '5 min prep (set overnight)',
+      ingredients: ['200g curd (hung overnight in muslin/thin cloth)', '\u00bd tsp roasted cumin powder', 'Salt to taste'],
+      steps: ['Night before: tie 250g curd in a thin cloth over a bowl. Refrigerate overnight.', 'Morning: the thick hung curd is ready (~200g after draining).', 'Add roasted cumin + salt. Mix.', 'Transfer to dabba. Carry to office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Keema', note: 'Measure raw' },
+      { qty: '150g', name: 'Cabbage', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Keema + Cabbage',
+      cookTime: '15 min',
+      ingredients: ['250g chicken mince (keema)', '1 medium onion (chopped fine)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp garam masala', '\u00bd tsp red chilli powder', 'Salt to taste', '150g cabbage (shredded)'],
+      steps: ['Heat pan on medium-high (dry or minimal oil).', 'Add onion, cook 2 min.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chicken keema. Break up any lumps with spatula.', 'Add turmeric, chilli, salt. Stir well.', 'Cook 8-10 min on medium, stirring occasionally, till mince is fully cooked and dry.', 'Finish with garam masala.', 'Boil/stir-fry 150g shredded cabbage (3 min with salt + turmeric). Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '2 eggs', name: 'Egg Bhurji', note: '5 min' }
+    ], recipe: {
+      name: 'Quick Egg Bhurji',
+      cookTime: '5 min',
+      ingredients: ['2 eggs', '1 small onion (chopped)', 'Salt, turmeric to taste'],
+      steps: ['Heat pan. Add onion, cook 1 min.', 'Crack eggs in, scramble quickly with salt + turmeric.', 'Done in 3 min. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '200g', name: 'Paneer Curry', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Paneer Curry + Veggies',
+      cookTime: '15 min',
+      ingredients: ['200g paneer (cubed)', '1 medium onion (chopped)', '2 medium tomatoes (chopped or pureed)', '\u00bd tsp turmeric', '\u00bd tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g vegetables'],
+      steps: ['Dry saut\u00e9 onion 2 min on medium.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomatoes, turmeric, chilli, salt. Cook 4-5 min till tomatoes break down into a gravy.', 'Add paneer cubes. Gently fold in.', 'Add \u00bc cup water if too thick. Simmer 5 min.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Spiced Curd', note: '' }
+    ], recipe: {
+      name: 'Spiced Night Curd',
+      cookTime: '1 min',
+      ingredients: ['100g curd', '\u00bd tsp roasted cumin', 'Pinch of salt'],
+      steps: ['Curd in bowl. Add cumin + salt. Mix. Eat.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  4: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Egg Keema', note: '10 min cook' }
+    ], recipe: {
+      name: 'Egg Keema',
+      cookTime: '10 min',
+      ingredients: ['3 eggs (hard boiled)', '1 small onion (chopped fine)', '\u00bd tsp cumin seeds', '\u00bc tsp turmeric', 'Salt to taste', 'Pinch of red chilli'],
+      steps: ['Boil 3 eggs (10 min). Peel.', 'Grate or roughly mash the boiled eggs.', 'Heat a dry pan. Add cumin seeds, let them crackle.', 'Add onion, saut\u00e9 2 min.', 'Add turmeric, chilli, salt.', 'Add grated egg. Toss 2 min on medium heat.', 'It should look like dry scrambled keema. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '100g', name: 'Paneer Tikka Bites', note: 'Sear morning, carry in dabba' }
+    ], recipe: {
+      name: 'Paneer Tikka Bites',
+      cookTime: '5 min (3 min sear + 2 min prep)',
+      ingredients: ['100g paneer (1-inch cubes)', '1 tbsp thick curd', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['Night before (or morning): Mix curd + chilli + turmeric + salt in a bowl.', 'Toss paneer cubes in this marinade. Rest 5 min (or overnight).', 'Morning: Heat a dry non-stick pan on high.', 'Place paneer cubes, sear 90 sec per side (slight char marks).', 'Cool and pack in dabba for office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Stir Fry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Bottle gourd', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Stir Fry + Bottle Gourd',
+      cookTime: '12 min',
+      ingredients: ['250g chicken breast (thin strips)', '\u00bd capsicum (sliced)', '1 small onion (sliced)', '1 tbsp soy sauce (low sodium)', '\u00bc tsp turmeric', 'Salt to taste', '150g bottle gourd (cubed)'],
+      steps: ['Heat pan on HIGH (this needs to be fast and hot).', 'Add chicken strips. Don\u2019t stir for 2 min (let them sear).', 'Flip, add onion + capsicum. Toss 3 min.', 'Add soy sauce + turmeric + salt. Toss 2 more min.', 'Chicken should be cooked through and slightly charred.', 'Pressure cook 150g bottle gourd cubes with salt + turmeric (1 whistle / 5 min). Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '1 cup', name: 'Quick Chicken Soup', note: '5 min' }
+    ], recipe: {
+      name: 'Quick Chicken Soup',
+      cookTime: '5 min',
+      ingredients: ['50g cooked chicken (leftover/shredded)', '1 cup hot water', '\u00bc tsp black pepper', 'Salt to taste', 'Fresh coriander (optional)'],
+      steps: ['Boil 1 cup water.', 'Add shredded chicken, pepper, salt.', 'Simmer 2-3 min.', 'Garnish with coriander. Sip hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Pepper Fry', note: 'Chettinad style' },
+      { qty: '100g', name: 'Paneer Bhurji', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Pepper Fry + Paneer Bhurji',
+      cookTime: '12 min total',
+      ingredients: ['3 eggs', '1 tbsp coarsely crushed black peppercorns', '8-10 curry leaves', '1 small onion (sliced)', '\u00bc tsp turmeric', 'Salt to taste', '100g paneer (crumbled)', '\u00bc tsp red chilli powder'],
+      steps: ['Boil 3 eggs (10 min). Peel, halve.', 'Heat dry pan on medium-high. Add curry leaves (they\u2019ll crackle).', 'Add onion, cook 2 min. Add turmeric + salt.', 'Add egg halves cut-side down. Sear 2 min.', 'Sprinkle crushed pepper generously. Toss gently.', 'Separately: crumble 100g paneer into another pan. Add chilli powder + salt. Toss 3 min.', 'Serve eggs + paneer side by side.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '80g', name: 'Small Paneer Bhurji', note: '3 min' }
+    ], recipe: {
+      name: 'Night Paneer Bhurji',
+      cookTime: '3 min',
+      ingredients: ['80g paneer (crumbled)', '\u00bc tsp turmeric', 'Pinch of salt'],
+      steps: ['Crumble paneer. Toss in dry pan with turmeric + salt for 2-3 min.', 'Quick, warm, high-protein night snack.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  5: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Masala Omelette', note: '5 min cook' }
+    ], recipe: {
+      name: 'Masala Omelette',
+      cookTime: '5 min',
+      ingredients: ['3 eggs', '\u00bc capsicum (chopped fine)', '1 small onion (chopped fine)', '1 green chilli (chopped)', 'Salt + pepper to taste', '1 tsp oil'],
+      steps: ['Beat 3 eggs with salt + pepper in a bowl.', 'Mix in chopped capsicum, onion, green chilli.', 'Heat 1 tsp oil in non-stick pan on medium.', 'Pour egg mixture, spread evenly.', 'Cook 2 min, then fold in half (thick omelette style).', 'Cook 1 more min per side. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Spiced Curd',
+      cookTime: '1 min',
+      ingredients: ['200g curd', '\u00bc tsp black salt', 'Pinch of black pepper'],
+      steps: ['Curd in dabba. Add black salt + pepper. Mix. Carry.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Do Pyaza', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Beans / Cauliflower', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Do Pyaza + Veggies',
+      cookTime: '20 min',
+      ingredients: ['250g chicken breast (cubed)', '2 large onions (one chopped for gravy, one sliced for topping)', '1 medium tomato (chopped)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp red chilli', '\u00bd tsp garam masala', 'Salt to taste', '150g beans or cauliflower'],
+      steps: ['"Do pyaza" = double onion. Two onions used two ways.', 'Heat pan. Add chopped onion (onion 1), cook 3 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli, salt. Cook 3 min till soft.', 'Add chicken. Stir to coat. Add \u00bc cup water.', 'Cover, cook 10 min on medium.', 'Add sliced onion (onion 2) on top. Cover 3 more min (they steam slightly).', 'Finish with garam masala.', 'Boil/steam 150g veggies. Pack together.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '150g', name: 'Paneer Tikka on Dry Tawa', note: '8 min cook' }
+    ], recipe: {
+      name: 'Paneer Tikka (Tawa Style)',
+      cookTime: '8 min',
+      ingredients: ['150g paneer (thick slices or cubes)', '1 tbsp thick curd', '\u00bd tsp red chilli', '\u00bc tsp turmeric', '\u00bc tsp garam masala', 'Salt to taste'],
+      steps: ['Mix curd + chilli + turmeric + garam masala + salt.', 'Coat paneer pieces in this marinade. Rest 5 min.', 'Heat a dry tawa/pan on high.', 'Place paneer pieces. Don\u2019t move for 2 min (let a crust form).', 'Flip, cook 2 more min.', 'Nice charred spots = done. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Drop Soup', note: '5 min cook' },
+      { qty: '100g', name: 'Seared Paneer Cubes', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Drop Soup + Seared Paneer',
+      cookTime: '8 min total',
+      ingredients: ['3 eggs', '2 cups water', '1 tbsp soy sauce', '\u00bc tsp black pepper', '1 spring onion (sliced)', 'Salt to taste', '100g paneer (cubes)'],
+      steps: ['Boil 2 cups water. Add soy sauce, pepper, salt.', 'Beat 3 eggs in a bowl.', 'Slowly pour beaten eggs into boiling water in a thin stream, stirring gently.', 'Eggs will form silky ribbons. Cook 1 min.', 'Add spring onion. Serve in a bowl.', 'Separately: sear 100g paneer cubes on dry tawa, 2 min per side, with salt. Serve alongside soup.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Warm Curd', note: '' }
+    ], recipe: {
+      name: 'Warm Night Curd',
+      cookTime: '1 min',
+      ingredients: ['100g curd'],
+      steps: ['Microwave 15-20 sec (just remove chill). Eat plain.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  6: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '2 eggs + 100g paneer', name: 'Egg-Paneer Scramble', note: '5 min cook' }
+    ], recipe: {
+      name: 'Egg-Paneer Scramble',
+      cookTime: '5 min',
+      ingredients: ['2 eggs', '100g paneer (crumbled)', '\u00bc tsp turmeric', 'Salt to taste', '1 green chilli (optional)'],
+      steps: ['Heat a pan on medium.', 'Crack 2 eggs in, add crumbled paneer immediately.', 'Scramble everything together with turmeric + salt + chilli.', 'Cook 3-4 min, stirring. The paneer and egg become one dish.', 'Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Hung Curd + Roasted Cumin', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Hung Curd Snack',
+      cookTime: '2 min (set overnight)',
+      ingredients: ['200g curd (hung overnight)', '\u00bd tsp roasted cumin', 'Salt to taste'],
+      steps: ['Night before: hang 250g curd in cloth over bowl. Fridge overnight.', 'Morning: add cumin + salt to the thick hung curd. Pack in dabba.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Jeera Chicken', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Mixed Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Jeera Chicken + Mixed Veggies',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed)', '1 tbsp cumin seeds (jeera)', '1 small onion (sliced)', '4 cloves garlic (sliced)', '\u00bc tsp turmeric', 'Salt to taste', '150g mixed vegetables'],
+      steps: ['Heat a dry pan on medium. Add cumin seeds, toast till fragrant (30 sec).', 'Add sliced onion + garlic. Cook 2 min.', 'Add chicken + turmeric + salt. Stir.', 'Cook 10 min on medium, stirring occasionally, till chicken is done and slightly dry.', 'The cumin should be the dominant flavour \u2014 generous jeera.', 'Boil/steam 150g mixed veggies. Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '2 eggs', name: 'Masala Egg Fry', note: 'Chettinad pepper style, 10 min' }
+    ], recipe: {
+      name: 'Chettinad Masala Egg Fry',
+      cookTime: '10 min',
+      ingredients: ['2 eggs', '\u00bd tsp coarsely crushed peppercorns', '5-6 curry leaves', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['Boil 2 eggs (8 min). Peel, halve.', 'Heat a dry pan. Add curry leaves (crackle).', 'Place egg halves cut-side down. Sear 2 min.', 'Flip, add pepper + turmeric + salt.', 'Toss 1 min. Eat hot with the curry leaves.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '200g', name: 'Paneer Makhani', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Paneer Makhani (PSMF-friendly) + Veggies',
+      cookTime: '15 min',
+      ingredients: ['200g paneer (cubed)', '2 medium tomatoes (pureed in mixer)', '1 tsp ginger-garlic paste', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', '\u00bd tsp garam masala', '1 tsp dried fenugreek leaves (kasuri methi)', 'Salt to taste', '150g vegetables'],
+      steps: ['Heat pan. Add ginger-garlic paste, fry 30 sec.', 'Add tomato puree + turmeric + chilli + salt.', 'Cook 5-6 min on medium till tomato reduces and oil separates (if any).', 'Add paneer cubes, fold gently.', 'Add 2 tbsp water if too thick. Simmer 5 min.', 'Crush kasuri methi between palms, sprinkle in. Add garam masala.', 'Traditional makhani uses butter/cream \u2014 skip those. The tomato gravy alone is rich enough.', 'Steam 150g veggies. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '1 cup', name: 'Warm Turmeric Water + Pepper', note: 'Zero cal' }
+    ]},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ]
+};
+
+function getRotationDay(day) {
+  return ((day - 1) % 6) + 1;
+}
+
+function getCookingNote(day) {
+  return COOKING_NOTES[getRotationDay(day)] || '';
+}
+
+function getDepletionMeals(day) {
+  return ROTATION_MEALS[getRotationDay(day)];
+}
+
+function getCarbMeals(day) {
+  var rotDay = getRotationDay(day);
+  var baseMeals = JSON.parse(JSON.stringify(ROTATION_MEALS[rotDay]));
+  var rice = day <= 11 ? '100g cooked' : '120g cooked';
+  baseMeals.forEach(function(meal) {
+    if (meal.id === 'lunch' || meal.id === 'dinner') {
+      meal.items.push({ qty: rice, name: 'Cooked rice', note: 'White or brown' });
+    }
+  });
+  return baseMeals;
 }
 
 // ========== PREP / INGREDIENTS FOR NEXT DAY ==========
 function getIngredientsForDay(day) {
-  if (day > 12) return []; // no next day
+  if (day > 12) return [];
+  var rotDay = getRotationDay(day);
   var items = [];
   items.push({ name: 'Lemon', qty: '1' });
-  items.push({ name: 'Eggs', qty: '3' });
-  items.push({ name: 'Chicken breast (raw)', qty: '500g' });
-  items.push({ name: 'Curd / Hung curd', qty: '300\u2013350g' });
-  items.push({ name: 'Vegetables (spinach/capsicum/onion)', qty: '100\u2013150g' });
-  items.push({ name: 'Vegetables (cabbage/cauliflower/beans)', qty: '300\u2013400g' });
   items.push({ name: 'Ajwain (carom seeds)', qty: '1 tsp' });
   items.push({ name: 'Isabgol (psyllium husk)', qty: '1 tsp' });
-  items.push({ name: 'Salt, pepper, spices', qty: 'normal amounts' });
+  items.push({ name: 'Salt, turmeric, chilli powder, pepper', qty: 'stock check' });
+
+  if (rotDay === 1) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Cauliflower', qty: '1 small' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Tomato', qty: '2\u20133' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Green chilli', qty: '2\u20133' });
+    items.push({ name: 'Coriander leaves', qty: 'small bunch' });
+    items.push({ name: 'Cumin, black salt', qty: 'stock check' });
+  } else if (rotDay === 2) {
+    items.push({ name: 'Eggs', qty: '3' });
+    items.push({ name: 'Chicken breast (raw)', qty: '500g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Beans', qty: '150g' });
+    items.push({ name: 'Spinach', qty: '100g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Garlic', qty: '1 pod' });
+    items.push({ name: 'Pepper (crushed)', qty: '2 tbsp' });
+    items.push({ name: 'Curry leaves', qty: '1 sprig' });
+    items.push({ name: 'Mustard seeds', qty: '1 tsp' });
+  } else if (rotDay === 3) {
+    items.push({ name: 'Eggs', qty: '5' });
+    items.push({ name: 'Minced chicken (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Cabbage', qty: '150g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Tomato', qty: '3\u20134' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Ginger-garlic paste', qty: '1 tbsp' });
+    items.push({ name: 'Garam masala', qty: '1 tsp' });
+  } else if (rotDay === 4) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '250g' });
+    items.push({ name: 'Curd', qty: '200g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Bottle gourd', qty: '150g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Soy sauce', qty: '1 tbsp' });
+    items.push({ name: 'Peppercorns (whole)', qty: '1 tbsp' });
+    items.push({ name: 'Curry leaves', qty: '1 sprig' });
+    items.push({ name: 'Coriander leaves', qty: 'small bunch' });
+  } else if (rotDay === 5) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '300g' });
+    items.push({ name: 'Cauliflower / Beans', qty: '150g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Spring onion', qty: '2\u20133 stalks' });
+    items.push({ name: 'Soy sauce', qty: '1 tbsp' });
+    items.push({ name: 'Black salt', qty: 'stock check' });
+  } else if (rotDay === 6) {
+    items.push({ name: 'Eggs', qty: '4' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '300g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Mixed vegetables', qty: '300g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Tomato', qty: '2\u20133' });
+    items.push({ name: 'Cumin (whole)', qty: '1 tbsp' });
+  }
+
   if (isCarbDay(day)) {
-    var riceQty = day <= 11 ? '200g cooked (measure for lunch + dinner)' : '240g cooked';
+    var riceQty = day <= 11 ? '200g cooked (for lunch + dinner)' : '240g cooked';
     items.push({ name: 'Rice (white or brown)', qty: riceQty });
   }
   return items;
 }
 
+
 function getAllTaskIds(day) {
-  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  var meals = isDepDay(day) ? getDepletionMeals(day) : getCarbMeals(day);
   return meals.map(function(m){ return m.id; });
 }
 
@@ -442,7 +815,7 @@ function getAllTaskIds(day) {
 function getRulesForDay(day) {
   var rules = [];
   if (day <= 9) {
-    rules.push('\u{1F4A7} Water: 3L today \u00b7 lemon + salt in morning');
+    rules.push('\u{1F4A7} Minimal water morning (avoid washroom mid-commute). Spread 3L from 10 AM onwards.');
     rules.push('\u{1F95B} Curd is non-negotiable');
     rules.push('\u274C Avoid: rice, roti, bread, sugar, fruits, milk, butter, cheese, fried food');
     rules.push('\u2705 Allowed: black coffee/tea (no sugar, max 2 cups), all spices, minimal oil');
@@ -451,7 +824,7 @@ function getRulesForDay(day) {
     if (day >= 7) rules.push('\u{1F3AF} ' + (9 - day) + ' depletion day' + (9-day>1?'s':'') + ' remaining');
     if (day === 9) rules.push('\u2705 Tomorrow you add rice \u2014 not a binge, just 100g at lunch & dinner');
   } else {
-    rules.push('\u{1F4A7} Water: 3L \u2014 keep it up');
+    rules.push('\u{1F4A7} Minimal water morning (avoid washroom mid-commute). Spread 3L from 10 AM onwards.');
     rules.push('\u{1F95B} Curd stays non-negotiable');
     rules.push('\u2705 Same meals as depletion + rice at lunch & dinner');
     rules.push('\u26A0\uFE0F Rice only \u2014 no roti/bread/sweets/fruits yet');
@@ -537,7 +910,7 @@ function renderDayPlan(day) {
   var data = load();
   var checks = data.checks || {};
   var dc = checks[day] || {};
-  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  var meals = isDepDay(day) ? getDepletionMeals(day) : getCarbMeals(day);
   var allIds = getAllTaskIds(day);
   var doneCount = allIds.filter(function(id){ return dc[id]; }).length;
   var pct = Math.round((doneCount / allIds.length) * 100);
@@ -558,6 +931,15 @@ function renderDayPlan(day) {
   rules.forEach(function(r){ html += '<div class="day-rule">' + r + '</div>'; });
   html += '</div>';
 
+  // Cooking note
+  var cookNote = getCookingNote(day);
+  if (cookNote) {
+    html += '<div class="cooking-note">';
+    html += '<div class="cooking-note-icon">\u{1F373}</div>';
+    html += '<div><div class="cooking-note-label">Morning cooking plan</div>';
+    html += '<div class="cooking-note-text">' + cookNote + '</div></div></div>';
+  }
+
   // Meal blocks as trackable items
   meals.forEach(function(meal) {
     var done = dc[meal.id];
@@ -574,6 +956,21 @@ function renderDayPlan(day) {
       if (item.note) html += '<div class="food-note">' + item.note + '</div>';
       html += '</div></div>';
     });
+    if (meal.recipe) {
+      var r = meal.recipe;
+      html += '<div class="recipe-toggle" onclick="event.stopPropagation();toggleRecipe(this)">\u{1F4D6} Recipe <span class="recipe-chevron">\u25BE</span></div>';
+      html += '<div class="recipe-body">';
+      html += '<div class="recipe-name">' + r.name + '</div>';
+      html += '<div class="recipe-time">\u23F1 ' + r.cookTime + '</div>';
+      html += '<div class="recipe-section-title">Ingredients</div>';
+      html += '<ul class="recipe-ingredients">';
+      r.ingredients.forEach(function(ing) { html += '<li>' + ing + '</li>'; });
+      html += '</ul>';
+      html += '<div class="recipe-section-title">Steps</div>';
+      html += '<ol class="recipe-steps">';
+      r.steps.forEach(function(s) { html += '<li>' + s + '</li>'; });
+      html += '</ol></div>';
+    }
     html += '</div></div>';
   });
 
@@ -592,6 +989,12 @@ function renderDayPlan(day) {
   }
 
   area.innerHTML = html;
+}
+
+function toggleRecipe(btn) {
+  var body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
 }
 
 function toggleExpand(header) {
@@ -634,55 +1037,32 @@ function toggleTask(day, taskId) {
   renderOverview();
 }
 
+
 // ========== BODY ==========
 function logBody() {
   var wVal = parseFloat(document.getElementById('weight-input').value);
   var bfVal = parseFloat(document.getElementById('bf-input').value);
-  var bfkgVal = parseFloat(document.getElementById('bfkg-input').value);
-  var vfiVal = parseFloat(document.getElementById('vfi-input').value);
-  var lbmVal = parseFloat(document.getElementById('lbm-input').value);
-  var bmrVal = parseFloat(document.getElementById('bmr-input').value);
   if (!wVal || wVal < 40 || wVal > 250) return;
   var data = load();
   if (!data.body) data.body = [];
-  var dateEl = document.getElementById('date-input');
-  var entryDate = (dateEl && dateEl.value) ? dateEl.value : new Date().toISOString().split('T')[0];
-  data.body = data.body.filter(function(e){ return e.date !== entryDate; });
-  var entry = { date: entryDate, kg: wVal };
+  var today = new Date().toISOString().split('T')[0];
+  data.body = data.body.filter(function(e){ return e.date !== today; });
+  var entry = { date: today, kg: wVal };
   if (bfVal && bfVal >= 3 && bfVal <= 60) entry.bf = bfVal;
-  if (bfkgVal && bfkgVal >= 3 && bfkgVal <= 80) entry.bfkg = bfkgVal;
-  if (vfiVal && vfiVal >= 1 && vfiVal <= 30) entry.vfi = vfiVal;
-  if (lbmVal && lbmVal >= 20 && lbmVal <= 120) entry.lbm = lbmVal;
-  if (bmrVal && bmrVal >= 800 && bmrVal <= 3000) entry.bmr = bmrVal;
   data.body.push(entry);
   data.body.sort(function(a,b){ return a.date.localeCompare(b.date); });
   save(data);
   document.getElementById('weight-input').value = '';
   document.getElementById('bf-input').value = '';
-  document.getElementById('bfkg-input').value = '';
-  document.getElementById('vfi-input').value = '';
-  document.getElementById('lbm-input').value = '';
-  document.getElementById('bmr-input').value = '';
-  // Reset the date back to today for the next manual entry
-  if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
   renderBody();
 }
 
 function renderBody() {
   var data = load();
   var entries = data.body || [];
-  // Default the date field to today if it's empty (don't clobber a chosen/OCR date)
-  var dateEl = document.getElementById('date-input');
-  if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
   renderChart('weight-svg', entries.map(function(e){ return e.kg; }), '#2d5a3d');
   var bfEntries = entries.filter(function(e){ return e.bf; });
   renderChart('bf-svg', bfEntries.map(function(e){ return e.bf; }), '#c17f3a');
-  var bfkgEntries = entries.filter(function(e){ return e.bfkg; });
-  renderChart('bfkg-svg', bfkgEntries.map(function(e){ return e.bfkg; }), '#8b3a3a');
-  var vfiEntries = entries.filter(function(e){ return e.vfi; });
-  renderChart('vfi-svg', vfiEntries.map(function(e){ return e.vfi; }), '#c17f3a', 80);
-  var lbmEntries = entries.filter(function(e){ return e.lbm; });
-  renderChart('lbm-svg', lbmEntries.map(function(e){ return e.lbm; }), '#2d5a3d', 80);
   var list = document.getElementById('body-log-list');
   if (!entries.length) { list.innerHTML = '<div style="text-align:center;padding:20px;color:#8a8479;font-size:12px">No entries yet</div>'; return; }
   var reversed = entries.slice().reverse().slice(0, 14);
@@ -690,331 +1070,30 @@ function renderBody() {
   for (var i = 0; i < reversed.length; i++) {
     var e = reversed[i]; var prev = reversed[i+1]; var delta = '';
     if (prev) { var diff = (e.kg - prev.kg).toFixed(1); delta = '<span class="weight-log-delta ' + (diff<=0?'down':'up') + '">' + (diff>0?'+':'') + diff + '</span>'; }
-    var details = [];
-    if (e.bf) details.push('BF ' + e.bf + '%');
-    if (e.bfkg) details.push('Fat ' + e.bfkg + 'kg');
-    if (e.vfi) details.push('VFI ' + e.vfi);
-    if (e.lbm) details.push('LBM ' + e.lbm + 'kg');
-    if (e.bmr) details.push('BMR ' + e.bmr);
-    var detailStr = details.length ? '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + details.join(' \u00b7 ') + '</div>' : '';
-    rows += '<div class="weight-log-row" style="flex-wrap:wrap"><div style="display:flex;align-items:center;gap:8px;width:100%"><span class="weight-log-date">' + e.date + '</span><span class="weight-log-val">' + e.kg + ' kg</span>' + delta + '<button class="weight-log-del" style="margin-left:auto" onclick="delBody(\'' + e.date + '\')">\u00D7</button></div>' + detailStr + '</div>';
+    rows += '<div class="weight-log-row"><span class="weight-log-date">' + e.date + '</span><span class="weight-log-val">' + e.kg + ' kg</span><span class="weight-log-bf">' + (e.bf ? e.bf+'%' : '\u2014') + '</span>' + delta + '<button class="weight-log-del" onclick="delBody(\'' + e.date + '\')">\u00D7</button></div>';
   }
-  list.innerHTML = '<div class="section-label">Log history</div>' + rows;
+  list.innerHTML = '<div class="section-label">Log history (last 14)</div>' + rows;
 }
 
-function renderChart(svgId, vals, color, svgH) {
-  svgH = svgH || 110;
+function renderChart(svgId, vals, color) {
   var svg = document.getElementById(svgId);
-  if (vals.length < 2) { svg.innerHTML = '<text x="290" y="' + (svgH/2) + '" text-anchor="middle" fill="#8a8479" font-size="11" font-family="Syne,sans-serif">Log at least 2 entries</text>'; return; }
-  var minV = Math.min.apply(null,vals)-0.5, maxV = Math.max.apply(null,vals)+0.5;
-  var W=560, H=svgH-10, PX=12, PY=10;
-  function px(i){ return PX+(i/(vals.length-1))*(W-PX*2); }
-  function py(v){ return PY+(1-(v-minV)/(maxV-minV))*(H-PY*2); }
-  var path='', dots='', labels='';
-  for(var i=0;i<vals.length;i++){
-    path += (i===0?'M':'L')+px(i).toFixed(1)+' '+py(vals[i]).toFixed(1);
-    dots += '<circle cx="'+px(i).toFixed(1)+'" cy="'+py(vals[i]).toFixed(1)+'" r="3" fill="'+color+'"/>';
-    if(vals.length<=14) labels += '<text x="'+px(i).toFixed(1)+'" y="'+(py(vals[i])-7).toFixed(1)+'" text-anchor="middle" fill="#8a8479" font-size="9" font-family="Syne,sans-serif">'+vals[i]+'</text>';
+  if (!vals.length || vals.length < 2) return;
+  var W=320, H=100, pad=20;
+  var min = Math.min.apply(null, vals) - 0.5, max = Math.max.apply(null, vals) + 0.5;
+  if (max === min) { max += 1; min -= 1; }
+  function px(i) { return pad + i * ((W - 2*pad) / (vals.length - 1)); }
+  function py(v) { return H - pad - ((v - min) / (max - min)) * (H - 2*pad); }
+  var path = 'M' + px(0).toFixed(1) + ',' + py(vals[0]).toFixed(1);
+  for (var i = 1; i < vals.length; i++) path += ' L' + px(i).toFixed(1) + ',' + py(vals[i]).toFixed(1);
+  var dots = '', labels = '';
+  for (var i = 0; i < vals.length; i++) {
+    dots += '<circle cx="' + px(i).toFixed(1) + '" cy="' + py(vals[i]).toFixed(1) + '" r="3" fill="' + color + '"/>';
+    if (vals.length <= 14) labels += '<text x="' + px(i).toFixed(1) + '" y="' + (py(vals[i])-7).toFixed(1) + '" text-anchor="middle" fill="#8a8479" font-size="9" font-family="Syne,sans-serif">' + vals[i] + '</text>';
   }
-  svg.innerHTML = '<path d="'+path+'" fill="none" stroke="'+color+'" stroke-width="1.5"/>'+dots+labels;
+  svg.innerHTML = '<path d="' + path + '" fill="none" stroke="' + color + '" stroke-width="1.5"/>' + dots + labels;
 }
 
 function delBody(date) { var data=load(); data.body=(data.body||[]).filter(function(e){return e.date!==date;}); save(data); renderBody(); }
-
-// ========== OCR IMPORT ==========
-var tesseractLoaded = false;
-
-function showOcrStatus(msg, isError) {
-  var el = document.getElementById('ocr-status');
-  el.style.display = 'block';
-  el.innerHTML = msg;
-  if (isError) { el.style.background = '#fdf0e0'; el.style.borderColor = '#e8c484'; el.style.color = '#7a4f1a'; }
-  else { el.style.background = '#eaf4fd'; el.style.borderColor = '#b8d8f0'; el.style.color = '#1a4a6b'; }
-}
-
-// Preprocess the screenshot to help OCR: upscale, grayscale, and boost contrast.
-// The scale app uses white-on-blue styled text for the header weight and light-grey
-// labels inside cards — both read poorly at native resolution. Returns a Promise
-// resolving to a data URL of the processed image.
-function preprocessImage(file) {
-  return new Promise(function(resolve, reject) {
-    var img = new Image();
-    var url = URL.createObjectURL(file);
-    img.onload = function() {
-      try {
-        // Upscale to at least ~1400px wide (Tesseract likes larger text)
-        var scale = Math.max(1, Math.min(3, 1400 / img.width));
-        var w = Math.round(img.width * scale);
-        var h = Math.round(img.height * scale);
-        var canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-
-        var imgData = ctx.getImageData(0, 0, w, h);
-        var d = imgData.data;
-        // Grayscale + contrast stretch. Contrast factor ~1.6 pulls faint text darker.
-        var contrast = 1.6;
-        var intercept = 128 * (1 - contrast);
-        for (var i = 0; i < d.length; i += 4) {
-          var gray = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-          var v = contrast * gray + intercept;
-          v = v < 0 ? 0 : (v > 255 ? 255 : v);
-          d[i] = d[i + 1] = d[i + 2] = v;
-        }
-        ctx.putImageData(imgData, 0, 0);
-        URL.revokeObjectURL(url);
-        resolve(canvas.toDataURL('image/png'));
-      } catch (e) {
-        URL.revokeObjectURL(url);
-        // If preprocessing fails (e.g. canvas tainted), fall back to the raw file.
-        resolve(file);
-      }
-    };
-    img.onerror = function() { URL.revokeObjectURL(url); resolve(file); };
-    img.src = url;
-  });
-}
-
-function ocrImport(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  event.target.value = '';
-
-  showOcrStatus('Loading OCR engine...');
-
-  function runOcr() {
-    showOcrStatus('Preparing image...');
-    preprocessImage(file).then(function(processed) {
-      showOcrStatus('Reading image...');
-      return Tesseract.recognize(processed, 'eng', { logger: function() {} });
-    })
-    .then(function(result) {
-      var text = result.data.text;
-      console.log('OCR raw text:', text);
-      parseScaleData(text);
-    }).catch(function(err) {
-      showOcrStatus('OCR failed: ' + err.message, true);
-    });
-  }
-
-  if (tesseractLoaded) { runOcr(); return; }
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-  script.onload = function() { tesseractLoaded = true; runOcr(); };
-  script.onerror = function() { showOcrStatus('Failed to load OCR engine. Check internet.', true); };
-  document.head.appendChild(script);
-}
-
-function parseScaleData(text) {
-  console.log('OCR raw text:', text);
-
-  // --- Normalise: drop non-ASCII noise (arrows, ¢, symbols), keep line structure ---
-  var clean = text.replace(/[^\x20-\x7E\n]/g, ' ');
-  var rawLines = clean.split('\n');
-  var lines = [];
-  for (var i = 0; i < rawLines.length; i++) {
-    var ln = rawLines[i].replace(/\s+/g, ' ').trim();
-    if (ln) lines.push(ln);
-  }
-
-  var STATUS = /(too high|very high|high|ideal|very low|low|standard|old|obese|overweight|normal)/i;
-
-  // All numbers in a line, stripped of trailing punctuation OCR adds (":", etc.)
-  function numsIn(line) {
-    var out = [], re = /(\d{1,4}(?:\.\d{1,2})?)/g, m;
-    while ((m = re.exec(line)) !== null) out.push(parseFloat(m[1]));
-    return out;
-  }
-
-  // The Xiaomi layout is two columns. OCR emits each row of cards as a triplet:
-  //   "<left label>  <right label>"
-  //   "<left status> <right status>"
-  //   "<left value>  <noise> <right value>"
-  // For a label we locate its line, decide its column (left/right by position),
-  // then read the matching number from the value line 1-2 rows below (skipping the
-  // status line). col: 0 = left, 1 = right.
-  function inRange(v, opts) {
-    if (opts.min != null && v < opts.min) return false;
-    if (opts.max != null && v > opts.max) return false;
-    return true;
-  }
-  function extract(labelRe, opts) {
-    opts = opts || {};
-    for (var i = 0; i < lines.length; i++) {
-      var mm = lines[i].match(labelRe);
-      if (!mm) continue;
-      if (opts.reject && opts.reject.test(lines[i])) continue;
-      var col = mm.index > 4 ? 1 : 0; // label starting well into the line => right column
-      for (var j = i + 1; j <= i + 3 && j < lines.length; j++) {
-        var nums = numsIn(lines[j]);
-        if (nums.length === 0) continue;                 // pure status/label line
-        // Keep only numbers within the plausible range — this drops trailing OCR
-        // noise like "34 26.9 0" where the "0" is a stray glyph.
-        var valid = nums.filter(function(n){ return inRange(n, opts); });
-        if (valid.length === 0) continue;
-        // If several valid numbers remain, pick by column: right => last, left => first.
-        var v = valid.length === 1 ? valid[0] : (col === 1 ? valid[valid.length - 1] : valid[0]);
-        return opts.isInt ? Math.round(v) : v;
-      }
-    }
-    return null;
-  }
-
-  // BF% (left column). Sanity 3-60.
-  var bf = extract(/body fat percentage|body fat %|\bbf%\b/i, { min: 3, max: 60 });
-
-  // Muscle mass in kg (right column, shares value line with BF%). 30-80.
-  // Tricky: "muscle mass" also appears in a prose sentence and in "muscle mass
-  // percentage". We only want the real card label. Strategy: scan all label lines
-  // that mention muscle mass, skip ones that are "muscle mass percentage" or a prose
-  // sentence (ends with a period / very long), then read the right-column value.
-  var mm = null;
-  for (var mi = 0; mi < lines.length && mm == null; mi++) {
-    var mline = lines[mi];
-    if (!/muscle mass/i.test(mline)) continue;
-    if (/muscle mass percentage/i.test(mline)) continue;   // that's the % card
-    if (/[a-z]\.$/i.test(mline) || mline.length > 45) continue; // prose sentence
-    var mcol = mline.match(/muscle mass/i).index > 4 ? 1 : 0;
-    for (var mj = mi + 1; mj <= mi + 3 && mj < lines.length; mj++) {
-      var mvalid = numsIn(lines[mj]).filter(function(n){ return n >= 30 && n <= 80; });
-      if (mvalid.length === 0) continue;
-      mm = mvalid.length === 1 ? mvalid[0] : (mcol === 1 ? mvalid[mvalid.length - 1] : mvalid[0]);
-      break;
-    }
-  }
-
-  // Body fat mass in kg (right column of the Biological-age row). 5-80. Used to derive weight.
-  var bodyFatKg = extract(/(^|\s)body fat(\s|$)/i, { reject: /percentage|%/i, min: 5, max: 80 });
-
-  // Visceral fat index (int). 1-60.
-  var vfi = extract(/visceral fat/i, { isInt: true, min: 1, max: 60 });
-
-  // BMR: 4-digit value 1000-3000. Search the value line for a number in range.
-  var bmr = null;
-  for (var b = 0; b < lines.length; b++) {
-    if (/basal metabolic|\bbmr\b/i.test(lines[b])) {
-      for (var j3 = b + 1; j3 <= b + 3 && j3 < lines.length; j3++) {
-        var bn = numsIn(lines[j3]);
-        for (var q = 0; q < bn.length; q++) {
-          if (bn[q] >= 1000 && bn[q] <= 3000) { bmr = Math.round(bn[q]); break; }
-        }
-        if (bmr != null) break;
-      }
-      if (bmr != null) break;
-    }
-  }
-
-  // Lean body mass in kg (left column). 30-120.
-  var lbm = extract(/lean body mass/i, { min: 30, max: 120 });
-
-  // --- DATE --- the header shows the weigh-in date, e.g. "Jun 15 06:34".
-  // Parse a "Mon DD" pattern (optionally with a year). If no year, assume the most
-  // recent occurrence: use current year, but roll back a year if that lands in the future.
-  var isoDate = null;
-  var MONTHS = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
-  var dm = clean.match(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:\s*,?\s*(\d{4}))?/i);
-  if (dm) {
-    var mon = MONTHS[dm[1].slice(0, 3).toLowerCase()];
-    var day = parseInt(dm[2], 10);
-    if (mon != null && day >= 1 && day <= 31) {
-      var now = new Date();
-      var yr = dm[3] ? parseInt(dm[3], 10) : now.getFullYear();
-      var d = new Date(yr, mon, day);
-      // No explicit year and date is in the future => it was last year
-      if (!dm[3] && d.getTime() > now.getTime() + 86400000) { yr -= 1; d = new Date(yr, mon, day); }
-      var mo = String(mon + 1).padStart(2, '0');
-      var da = String(day).padStart(2, '0');
-      isoDate = yr + '-' + mo + '-' + da;
-    }
-  }
-  if (isoDate) {
-    var dEl = document.getElementById('date-input');
-    if (dEl) dEl.value = isoDate;
-  }
-
-  // --- WEIGHT ---
-  // 1) Prefer the header weight: a "NN.NN kg" not preceded by "Goal", in 40-200 range.
-  //    With preprocessing the header often reads now; if several match, the header is
-  //    typically the largest realistic bodyweight.
-  var weight = null, weightSource = '';
-
-  // 1a) Header weight by position: it sits just under the date line and right above
-  //     the "BF%" line, e.g. "Jun 15 06:34" / "90.75." / "29.9%BF%". OCR often drops
-  //     the "kg" (reads "90.75."), so match a standalone number here, not "NN kg".
-  var dateLineIdx = -1;
-  for (var wi = 0; wi < lines.length; wi++) {
-    if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i.test(lines[wi])) { dateLineIdx = wi; break; }
-  }
-  if (dateLineIdx !== -1) {
-    for (var wj = dateLineIdx + 1; wj <= dateLineIdx + 2 && wj < lines.length; wj++) {
-      // skip lines that are clearly BF% (e.g. "29.9%BF%") or contain letters like "goal"
-      if (/goal/i.test(lines[wj])) continue;
-      var wn = numsIn(lines[wj]);
-      for (var wq = 0; wq < wn.length; wq++) {
-        // header weight is NN.NN, not a percentage and not the small BF% value
-        if (wn[wq] >= 40 && wn[wq] <= 200 && !/%/.test(lines[wj])) { weight = wn[wq]; weightSource = 'ocr'; break; }
-      }
-      if (weight != null) break;
-    }
-  }
-
-  // 1b) Fallback scan: any "NN.NN kg" not preceded by "Goal" and not equal to the LBM
-  //     value we already read (so LBM's "63.1 kg" can't masquerade as weight).
-  if (weight == null) {
-    var wRe = /(\d{2,3}(?:\.\d{1,2})?)\s*k/gi, wm, wCand = [];
-    while ((wm = wRe.exec(clean)) !== null) {
-      var pre = clean.substring(Math.max(0, wm.index - 12), wm.index).toLowerCase();
-      var val = parseFloat(wm[1]);
-      if (pre.indexOf('goal') === -1 && val >= 40 && val <= 200 && (lbm == null || Math.abs(val - lbm) > 0.05)) wCand.push(val);
-    }
-    if (wCand.length) { weight = Math.max.apply(null, wCand); weightSource = 'ocr'; }
-  }
-
-  // 2) Final fallback: derive weight from Body fat mass / BF%. This app guarantees
-  //    bodyFatKg = weight * BF%/100, so weight = bodyFatKg / (BF%/100).
-  if (weight == null && bodyFatKg != null && bf != null) {
-    var derived = bodyFatKg / (bf / 100);
-    if (derived >= 40 && derived <= 200) { weight = Math.round(derived * 10) / 10; weightSource = 'derived'; }
-  }
-
-  if (weight != null) document.getElementById('weight-input').value = weight;
-  if (bf != null) document.getElementById('bf-input').value = bf;
-  if (bodyFatKg != null) document.getElementById('bfkg-input').value = bodyFatKg;
-  if (vfi != null) document.getElementById('vfi-input').value = vfi;
-  if (lbm != null) document.getElementById('lbm-input').value = lbm;
-  if (bmr != null) document.getElementById('bmr-input').value = bmr;
-
-  var found = [
-    isoDate && ('Date: ' + isoDate),
-    weight != null && ('Weight: ' + weight + ' kg' + (weightSource === 'derived' ? ' (derived)' : '')),
-    bf != null && ('BF: ' + bf + '%'),
-    bodyFatKg != null && ('Fat: ' + bodyFatKg + ' kg'),
-    vfi != null && ('VFI: ' + vfi),
-    lbm != null && ('LBM: ' + lbm + ' kg'),
-    bmr != null && ('BMR: ' + bmr)
-  ].filter(Boolean);
-
-  var rawBlock = '<details style="margin-top:6px;font-size:10px"><summary>Raw OCR text</summary><pre style="max-height:120px;overflow:auto;white-space:pre-wrap">' + text.replace(/</g, '&lt;') + '</pre></details>';
-
-  if (found.length === 0) {
-    showOcrStatus('Could not extract values \u2014 enter them manually.' + rawBlock, true);
-    return;
-  }
-
-  var notes = '';
-  if (weight == null) notes += '<br><strong style="color:#8b3a3a">Enter weight manually.</strong>';
-  else if (weightSource === 'derived') notes += '<br><span style="color:#555">Weight was derived from body fat \u00F7 BF% \u2014 double-check it.</span>';
-  var missing = [];
-  if (bf == null) missing.push('BF%');
-  if (bodyFatKg == null) missing.push('body fat kg');
-  if (vfi == null) missing.push('visceral fat');
-  if (lbm == null) missing.push('lean body mass');
-  if (missing.length) notes += '<br><span style="color:#8b3a3a">Missing (enter manually): ' + missing.join(', ') + '.</span>';
-
-  showOcrStatus('Extracted: <strong>' + found.join(' &middot; ') + '</strong>' + notes +
-    '<br>Verify and tap <strong>Log entry</strong> to save.' + rawBlock);
-}
 
 // ========== SYNC ==========
 function connectSync() {
@@ -1072,7 +1151,6 @@ function showPage(name, tab) {
   document.getElementById('page-'+name).classList.add('active');
   tab.classList.add('active');
   if(name==='dayplan')renderDayPlan(currentDay);
-  if(name==='body')renderBody();
 }
 function renderAll(){renderOverview();renderDayPlan(currentDay);renderBody();}
 

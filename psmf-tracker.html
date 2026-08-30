@@ -123,6 +123,23 @@
   .food-qty { color: var(--muted2); font-size: 11px; min-width: 90px; flex-shrink: 0; margin-top: 1px; }
   .food-name { color: var(--text); line-height: 1.4; }
   .food-note { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  /* RECIPE SECTION */
+  .recipe-toggle { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 6px 12px; background: #f0ece4; border: 1px solid var(--border); border-radius: 8px; font-size: 11px; color: var(--muted2); cursor: pointer; font-family: var(--font-sans); letter-spacing: 0.04em; -webkit-tap-highlight-color: transparent; user-select: none; transition: all 0.15s; }
+  .recipe-toggle:active { background: #e5e0d6; }
+  .recipe-toggle .recipe-chevron { transition: transform 0.2s; font-size: 9px; }
+  .recipe-toggle.open .recipe-chevron { transform: rotate(180deg); }
+  .recipe-body { display: none; margin-top: 10px; padding: 12px; background: #faf8f5; border: 1px solid var(--border); border-radius: 10px; }
+  .recipe-body.open { display: block; }
+  .recipe-name { font-family: var(--font-display); font-size: 17px; color: var(--text); margin-bottom: 2px; }
+  .recipe-time { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+  .recipe-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 6px; font-weight: 600; }
+  .recipe-ingredients { margin-bottom: 12px; }
+  .recipe-ingredients li { font-size: 12px; color: var(--text); padding: 2px 0; list-style: none; position: relative; padding-left: 14px; }
+  .recipe-ingredients li::before { content: '\2022'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .recipe-steps { counter-reset: step; }
+  .recipe-steps li { font-size: 12px; color: var(--text); padding: 5px 0; list-style: none; position: relative; padding-left: 26px; border-bottom: 1px solid #eee; line-height: 1.5; }
+  .recipe-steps li:last-child { border-bottom: none; }
+  .recipe-steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 
   /* PREP CARD */
   .prep-card { background: #f9f7f3; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
@@ -152,6 +169,16 @@
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* COOKING NOTE */
+  .cooking-note { background: #fff8f0; border: 1px solid #e8c484; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .cooking-note-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
+  .cooking-note-text { font-size: 12px; color: #7a4f1a; line-height: 1.6; }
+  .cooking-note-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); font-weight: 600; margin-bottom: 4px; }
+
+  .weight-log-delta.down { color: var(--accent); }
+  .weight-log-delta.up { color: var(--accent3); }
+  .weight-log-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -188,7 +215,7 @@
   </div>
   <div class="rules-card">
     <div class="rules-title">Quick reminders</div>
-    <div class="rule-row"><div class="rule-icon">&#128167;</div><div class="rule-text"><strong>Minimum 3L water every day</strong> &mdash; no exceptions</div></div>
+    <div class="rule-row"><div class="rule-icon">&#128167;</div><div class="rule-text"><strong>Minimal water morning</strong> &mdash; avoid washroom mid-commute. Spread 3L from 10 AM onwards.</div></div>
     <div class="rule-row"><div class="rule-icon">&#129371;</div><div class="rule-text"><strong>Never skip curd</strong> &mdash; gut protection on high protein</div></div>
     <div class="rule-row"><div class="rule-icon">&#127831;</div><div class="rule-text">Measure chicken <strong>raw weight</strong>, not cooked</div></div>
     <div class="rule-row"><div class="rule-icon">&#128683;</div><div class="rule-text">Days 9&ndash;12 carb-up is <strong>not a binge</strong> &mdash; one carb source per meal</div></div>
@@ -283,93 +310,483 @@ function isDepDay(d) { return d <= 9; }
 function isCarbDay(d) { return d >= 10; }
 
 // ========== MEAL DATA ==========
-var DEPLETION_MEALS = [
-  { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
-    { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: 'First thing' },
-    { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
-  ]},
-  { id: 'walk', title: 'Evening Walk', time: '~5:00 PM', items: [
-    { qty: '20\u201330 min', name: 'Light walk only', note: 'After reaching home \u2014 no intense exercise on PSMF' }
-  ]},
-  { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
-    { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled (minimal oil)', note: '' },
-    { qty: '100\u2013150g', name: 'Vegetables \u2014 spinach / capsicum / onion', note: '' }
-  ]},
-  { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
-    { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable \u2014 gut protection on high protein' }
-  ]},
-  { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '150\u2013200g', name: 'Vegetables \u2014 cabbage / cauliflower / beans / bottle gourd', note: '' }
-  ]},
-  { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-    { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: 'Either works \u2014 pick what you have' }
-  ]},
-  { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-    { qty: '250g raw', name: 'Chicken breast', note: 'Measure before cooking' },
-    { qty: '150\u2013200g', name: 'Vegetables \u2014 same as lunch', note: '' }
-  ]},
-  { id: 'bedtime', title: 'Before Bed', time: '~10:00 PM', items: [
-    { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
-  ]}
-];
 
-function getCarbMeals(day) {
-  var rice = day <= 11 ? '100g cooked' : '120g cooked';
-  return [
+// Cooking notes per rotation day
+var COOKING_NOTES = {
+  1: "Burner 1: Chicken curry + cauliflower (15 min). Burner 2: Egg bhurji (5 min). Start chicken first.",
+  2: "Burner 1: Pepper chicken + beans (15 min). Burner 2: Paneer bhurji (7 min).",
+  3: "Burner 1: Chicken keema + cabbage (15 min). Burner 2: Shakshuka eggs (7 min).",
+  4: "Burner 1: Chicken stir fry + bottle gourd (12 min). Burner 2: Egg keema (10 min). Also sear paneer tikka bites for office snack (3 min on same pan after eggs).",
+  5: "Burner 1: Chicken do pyaza + veggies (20 min). Burner 2: Masala omelette (5 min).",
+  6: "Burner 1: Jeera chicken + veggies (15 min). Burner 2: Egg-paneer scramble (5 min)."
+};
+
+// 6-day rotation meals (PSMF-compatible)
+var ROTATION_MEALS = {
+  1: [
     { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
-      { qty: '200ml warm', name: 'Lemon water + pinch of salt', note: '' },
-      { qty: '1 tsp in warm water', name: 'Ajwain water', note: '10 min after lemon water' }
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
     ]},
-    { id: 'walk', title: 'Evening Walk', time: '~5:00 PM', items: [
-      { qty: '20\u201330 min', name: 'Light walk only', note: 'After reaching home' }
-    ]},
-    { id: 'breakfast', title: 'Breakfast', time: '~7:00 AM', items: [
-      { qty: '3 whole', name: 'Eggs \u2014 boiled or scrambled', note: '' },
-      { qty: '100\u2013150g', name: 'Vegetables', note: '' }
-    ]},
-    { id: 'midmorning', title: 'Mid-morning \u2014 Curd', time: '~10:30 AM', items: [
-      { qty: '150\u2013200g', name: 'Curd / Hung curd', note: 'Non-negotiable' }
-    ]},
-    { id: 'lunch', title: 'Lunch', time: '~1:00 PM', items: [
-      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
-      { qty: rice, name: 'Cooked rice', note: 'White or brown' }
-    ]},
-    { id: 'evening', title: 'Evening', time: '~5:00 PM', items: [
-      { qty: '150g', name: 'Curd OR 120\u2013150g chicken', note: '' }
-    ]},
-    { id: 'dinner', title: 'Dinner', time: '~8:00 PM', items: [
-      { qty: '250g raw', name: 'Chicken breast + vegetables', note: '' },
-      { qty: rice, name: 'Cooked rice', note: 'Same as lunch' }
-    ]},
-    { id: 'bedtime', title: 'Before Bed', time: '~10:00 PM', items: [
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Egg Bhurji', note: '5 min cook' }
+    ], recipe: {
+      name: 'Egg Bhurji',
+      cookTime: '5 min',
+      ingredients: ['3 eggs', '1 small onion (chopped fine)', '1 green chilli (slit)', '\u00bc tsp turmeric', '1 tsp oil', 'Salt to taste', 'Fresh coriander (optional)'],
+      steps: ['Heat 1 tsp oil in a pan on medium.', 'Add chopped onion, saut\u00e9 1 min till soft.', 'Add slit green chilli, turmeric, salt.', 'Crack 3 eggs directly into pan, stir immediately with spatula.', 'Keep stirring/scrambling for 2 min until eggs are set but still soft.', 'Garnish with coriander. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Spiced Curd',
+      cookTime: '2 min (no cook)',
+      ingredients: ['200g fresh curd', '\u00bd tsp roasted cumin powder', '\u00bc tsp black salt', 'Pinch of red chilli powder (optional)'],
+      steps: ['Take 200g curd in a dabba/container.', 'Add roasted cumin, black salt, and chilli powder.', 'Mix well. Cover and refrigerate till you leave.', 'Eat at 10:30 AM at office \u2014 no heating needed.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Curry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Cauliflower', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Curry + Cauliflower',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed)', '1 medium onion (sliced)', '1 medium tomato (chopped)', '1 tsp oil', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g cauliflower florets', 'Water as needed'],
+      steps: ['Heat 1 tsp oil in pressure cooker/pan on medium.', 'Add sliced onion, cook 2 min till translucent.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chopped tomato, turmeric, chilli powder, salt. Cook 2 min till tomato softens.', 'Add 250g chicken cubes. Stir to coat in masala.', 'Add \u00bd cup water, cover. Pressure cook 2 whistles OR simmer 10 min.', 'Meanwhile, microwave or boil 150g cauliflower florets (3 min).', 'Add garam masala to chicken, stir. Pack in dabba with cauliflower on the side.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '150g', name: 'Paneer Bhurji', note: '7 min cook' }
+    ], recipe: {
+      name: 'Paneer Bhurji',
+      cookTime: '7 min',
+      ingredients: ['150g paneer (crumbled by hand)', '1 small onion (chopped fine)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Minimal oil or dry pan', 'Salt to taste'],
+      steps: ['Heat a pan on medium (dry or tiny oil).', 'Add chopped onion, saut\u00e9 2 min.', 'Add turmeric, chilli powder, salt.', 'Add crumbled paneer, mix well.', 'Toss for 3-4 min on medium heat till paneer is warm and lightly golden.', 'Serve immediately.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Curry', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Curry + Veggies',
+      cookTime: '15 min',
+      ingredients: ['3 eggs', '1 medium onion (chopped)', '1 medium tomato (chopped)', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g mixed vegetables', 'Water'],
+      steps: ['Boil 3 eggs (10 min). Peel, slit each egg with 2 cuts.', 'Heat a pan, add chopped onion. Dry saut\u00e9 2 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli powder, salt. Cook 2-3 min.', 'Add \u00bd cup water. Bring to simmer.', 'Slide in boiled eggs. Simmer 5 min, spooning gravy over eggs.', 'Finish with garam masala.', 'Steam/boil 150g veggies separately (3 min). Serve alongside.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Warm Spiced Curd', note: '' }
+    ], recipe: {
+      name: 'Warm Spiced Curd',
+      cookTime: '2 min',
+      ingredients: ['100g curd', '\u00bc tsp turmeric', 'Pinch of black pepper'],
+      steps: ['Take 100g curd in a bowl.', 'Microwave 20 sec (just to take the chill off, not hot).', 'Stir in turmeric and pepper. Eat slowly.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
       { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
     ]}
-  ];
+  ],
+  2: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '200g', name: 'Paneer Bhurji', note: '7 min cook' }
+    ], recipe: {
+      name: 'Paneer Bhurji',
+      cookTime: '7 min',
+      ingredients: ['200g paneer (crumbled)', '1 small onion (chopped)', '1 green chilli (chopped)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Salt to taste', 'Minimal oil'],
+      steps: ['Heat pan on medium, add tiny oil.', 'Saut\u00e9 onion + green chilli 2 min.', 'Add turmeric, chilli powder, salt.', 'Add crumbled paneer. Toss 4-5 min on medium-high.', 'Some pieces should get light golden spots. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Curd Tadka', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Curd Tadka',
+      cookTime: '3 min',
+      ingredients: ['200g curd', '1 tsp oil', '\u00bd tsp mustard seeds', '5-6 curry leaves', 'Pinch of hing (asafoetida)', 'Salt to taste'],
+      steps: ['Heat 1 tsp oil in a tiny pan.', 'Add mustard seeds. Wait for splutter (15 sec).', 'Add curry leaves + hing. Turn off heat.', 'Pour this tadka over 200g curd in a dabba.', 'Mix, cover, carry to office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Pepper Chicken Dry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Beans', note: 'Side' }
+    ], recipe: {
+      name: 'Pepper Chicken Dry + Beans',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed small)', '1 tbsp crushed black pepper', '8-10 curry leaves', '4 cloves garlic (sliced)', '1 small onion (sliced)', '\u00bd tsp turmeric', 'Salt to taste', '150g beans (chopped)'],
+      steps: ['Heat a pan on high. No oil needed if using non-stick.', 'Add chicken cubes. Sear without stirring for 2 min (let it brown).', 'Flip, add sliced garlic + curry leaves. Fry 1 min.', 'Add onion, turmeric, salt. Toss 3-4 min.', 'Add crushed pepper generously. Toss 2 more min till chicken is cooked and dry.', 'Boil/microwave 150g chopped beans (3 min). Pack both in dabba.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '3 eggs', name: 'Masala Egg Fry', note: '10 min' }
+    ], recipe: {
+      name: 'Masala Egg Fry',
+      cookTime: '10 min',
+      ingredients: ['3 eggs', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', 'Salt to taste', 'Pinch of black pepper'],
+      steps: ['Boil 3 eggs (8-10 min). Peel, halve lengthwise.', 'Heat a dry non-stick pan on medium.', 'Place egg halves cut-side down. Let them sear 1-2 min (slight golden crust).', 'Flip, sprinkle chilli powder, turmeric, salt, pepper over them.', 'Toss gently 1 min. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '250g raw', name: 'Chicken Palak', note: '18 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Palak + Veggies',
+      cookTime: '18 min',
+      ingredients: ['250g chicken breast (cubed)', '100g spinach (washed, roughly chopped)', '4 cloves garlic (minced)', '1 small onion (chopped)', '\u00bd tsp turmeric', '\u00bd tsp garam masala', 'Salt to taste', '150g vegetables'],
+      steps: ['Heat pan on medium. Dry saut\u00e9 onion 2 min.', 'Add garlic, cook 30 sec.', 'Add chicken + turmeric + salt. Cook 5 min, stirring.', 'Add chopped spinach. It will wilt down quickly.', 'Add \u00bc cup water. Cover, simmer 8-10 min till chicken is done.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '50g', name: 'Paneer in Warm Turmeric Water', note: 'Hot water drink' }
+    ], recipe: {
+      name: 'Paneer Turmeric Water',
+      cookTime: '2 min',
+      ingredients: ['50g paneer (small cubes)', '1 cup hot water', '\u00bc tsp turmeric', 'Pinch of black pepper'],
+      steps: ['Boil 1 cup water.', 'Drop in paneer cubes, turmeric, pepper.', 'Let sit 1 min. Sip the water, eat the paneer.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  3: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Shakshuka-Style Eggs', note: '7 min cook' }
+    ], recipe: {
+      name: 'Shakshuka-Style Eggs',
+      cookTime: '7 min',
+      ingredients: ['3 eggs', '\u00bd capsicum (chopped)', '1 small onion (chopped)', '1 medium tomato (chopped)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Salt to taste', '1 tsp oil'],
+      steps: ['Heat 1 tsp oil in a wide pan on medium.', 'Add onion + capsicum. Saut\u00e9 2 min.', 'Add tomato, turmeric, chilli, salt. Cook 2 min till tomato is soft and saucy.', 'Make 3 small wells in the mixture. Crack 1 egg into each.', 'Cover with lid. Cook 3 min till egg whites are set, yolks still slightly soft.', 'Eat directly from pan (or slide onto plate).']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Hung Curd + Roasted Jeera', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Hung Curd Snack',
+      cookTime: '5 min prep (set overnight)',
+      ingredients: ['200g curd (hung overnight in muslin/thin cloth)', '\u00bd tsp roasted cumin powder', 'Salt to taste'],
+      steps: ['Night before: tie 250g curd in a thin cloth over a bowl. Refrigerate overnight.', 'Morning: the thick hung curd is ready (~200g after draining).', 'Add roasted cumin + salt. Mix.', 'Transfer to dabba. Carry to office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Keema', note: 'Measure raw' },
+      { qty: '150g', name: 'Cabbage', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Keema + Cabbage',
+      cookTime: '15 min',
+      ingredients: ['250g chicken mince (keema)', '1 medium onion (chopped fine)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp garam masala', '\u00bd tsp red chilli powder', 'Salt to taste', '150g cabbage (shredded)'],
+      steps: ['Heat pan on medium-high (dry or minimal oil).', 'Add onion, cook 2 min.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chicken keema. Break up any lumps with spatula.', 'Add turmeric, chilli, salt. Stir well.', 'Cook 8-10 min on medium, stirring occasionally, till mince is fully cooked and dry.', 'Finish with garam masala.', 'Boil/stir-fry 150g shredded cabbage (3 min with salt + turmeric). Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '2 eggs', name: 'Egg Bhurji', note: '5 min' }
+    ], recipe: {
+      name: 'Quick Egg Bhurji',
+      cookTime: '5 min',
+      ingredients: ['2 eggs', '1 small onion (chopped)', 'Salt, turmeric to taste'],
+      steps: ['Heat pan. Add onion, cook 1 min.', 'Crack eggs in, scramble quickly with salt + turmeric.', 'Done in 3 min. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '200g', name: 'Paneer Curry', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Paneer Curry + Veggies',
+      cookTime: '15 min',
+      ingredients: ['200g paneer (cubed)', '1 medium onion (chopped)', '2 medium tomatoes (chopped or pureed)', '\u00bd tsp turmeric', '\u00bd tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g vegetables'],
+      steps: ['Dry saut\u00e9 onion 2 min on medium.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomatoes, turmeric, chilli, salt. Cook 4-5 min till tomatoes break down into a gravy.', 'Add paneer cubes. Gently fold in.', 'Add \u00bc cup water if too thick. Simmer 5 min.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Spiced Curd', note: '' }
+    ], recipe: {
+      name: 'Spiced Night Curd',
+      cookTime: '1 min',
+      ingredients: ['100g curd', '\u00bd tsp roasted cumin', 'Pinch of salt'],
+      steps: ['Curd in bowl. Add cumin + salt. Mix. Eat.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  4: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Egg Keema', note: '10 min cook' }
+    ], recipe: {
+      name: 'Egg Keema',
+      cookTime: '10 min',
+      ingredients: ['3 eggs (hard boiled)', '1 small onion (chopped fine)', '\u00bd tsp cumin seeds', '\u00bc tsp turmeric', 'Salt to taste', 'Pinch of red chilli'],
+      steps: ['Boil 3 eggs (10 min). Peel.', 'Grate or roughly mash the boiled eggs.', 'Heat a dry pan. Add cumin seeds, let them crackle.', 'Add onion, saut\u00e9 2 min.', 'Add turmeric, chilli, salt.', 'Add grated egg. Toss 2 min on medium heat.', 'It should look like dry scrambled keema. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '100g', name: 'Paneer Tikka Bites', note: 'Sear morning, carry in dabba' }
+    ], recipe: {
+      name: 'Paneer Tikka Bites',
+      cookTime: '5 min (3 min sear + 2 min prep)',
+      ingredients: ['100g paneer (1-inch cubes)', '1 tbsp thick curd', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['Night before (or morning): Mix curd + chilli + turmeric + salt in a bowl.', 'Toss paneer cubes in this marinade. Rest 5 min (or overnight).', 'Morning: Heat a dry non-stick pan on high.', 'Place paneer cubes, sear 90 sec per side (slight char marks).', 'Cool and pack in dabba for office.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Stir Fry', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Bottle gourd', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Stir Fry + Bottle Gourd',
+      cookTime: '12 min',
+      ingredients: ['250g chicken breast (thin strips)', '\u00bd capsicum (sliced)', '1 small onion (sliced)', '1 tbsp soy sauce (low sodium)', '\u00bc tsp turmeric', 'Salt to taste', '150g bottle gourd (cubed)'],
+      steps: ['Heat pan on HIGH (this needs to be fast and hot).', 'Add chicken strips. Don\u2019t stir for 2 min (let them sear).', 'Flip, add onion + capsicum. Toss 3 min.', 'Add soy sauce + turmeric + salt. Toss 2 more min.', 'Chicken should be cooked through and slightly charred.', 'Pressure cook 150g bottle gourd cubes with salt + turmeric (1 whistle / 5 min). Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '1 cup', name: 'Quick Chicken Soup', note: '5 min' }
+    ], recipe: {
+      name: 'Quick Chicken Soup',
+      cookTime: '5 min',
+      ingredients: ['50g cooked chicken (leftover/shredded)', '1 cup hot water', '\u00bc tsp black pepper', 'Salt to taste', 'Fresh coriander (optional)'],
+      steps: ['Boil 1 cup water.', 'Add shredded chicken, pepper, salt.', 'Simmer 2-3 min.', 'Garnish with coriander. Sip hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Pepper Fry', note: 'Chettinad style' },
+      { qty: '100g', name: 'Paneer Bhurji', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Pepper Fry + Paneer Bhurji',
+      cookTime: '12 min total',
+      ingredients: ['3 eggs', '1 tbsp coarsely crushed black peppercorns', '8-10 curry leaves', '1 small onion (sliced)', '\u00bc tsp turmeric', 'Salt to taste', '100g paneer (crumbled)', '\u00bc tsp red chilli powder'],
+      steps: ['Boil 3 eggs (10 min). Peel, halve.', 'Heat dry pan on medium-high. Add curry leaves (they\u2019ll crackle).', 'Add onion, cook 2 min. Add turmeric + salt.', 'Add egg halves cut-side down. Sear 2 min.', 'Sprinkle crushed pepper generously. Toss gently.', 'Separately: crumble 100g paneer into another pan. Add chilli powder + salt. Toss 3 min.', 'Serve eggs + paneer side by side.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '80g', name: 'Small Paneer Bhurji', note: '3 min' }
+    ], recipe: {
+      name: 'Night Paneer Bhurji',
+      cookTime: '3 min',
+      ingredients: ['80g paneer (crumbled)', '\u00bc tsp turmeric', 'Pinch of salt'],
+      steps: ['Crumble paneer. Toss in dry pan with turmeric + salt for 2-3 min.', 'Quick, warm, high-protein night snack.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  5: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '3 eggs', name: 'Masala Omelette', note: '5 min cook' }
+    ], recipe: {
+      name: 'Masala Omelette',
+      cookTime: '5 min',
+      ingredients: ['3 eggs', '\u00bc capsicum (chopped fine)', '1 small onion (chopped fine)', '1 green chilli (chopped)', 'Salt + pepper to taste', '1 tsp oil'],
+      steps: ['Beat 3 eggs with salt + pepper in a bowl.', 'Mix in chopped capsicum, onion, green chilli.', 'Heat 1 tsp oil in non-stick pan on medium.', 'Pour egg mixture, spread evenly.', 'Cook 2 min, then fold in half (thick omelette style).', 'Cook 1 more min per side. Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Spiced Curd',
+      cookTime: '1 min',
+      ingredients: ['200g curd', '\u00bc tsp black salt', 'Pinch of black pepper'],
+      steps: ['Curd in dabba. Add black salt + pepper. Mix. Carry.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Chicken Do Pyaza', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Beans / Cauliflower', note: 'Side' }
+    ], recipe: {
+      name: 'Chicken Do Pyaza + Veggies',
+      cookTime: '20 min',
+      ingredients: ['250g chicken breast (cubed)', '2 large onions (one chopped for gravy, one sliced for topping)', '1 medium tomato (chopped)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp red chilli', '\u00bd tsp garam masala', 'Salt to taste', '150g beans or cauliflower'],
+      steps: ['"Do pyaza" = double onion. Two onions used two ways.', 'Heat pan. Add chopped onion (onion 1), cook 3 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli, salt. Cook 3 min till soft.', 'Add chicken. Stir to coat. Add \u00bc cup water.', 'Cover, cook 10 min on medium.', 'Add sliced onion (onion 2) on top. Cover 3 more min (they steam slightly).', 'Finish with garam masala.', 'Boil/steam 150g veggies. Pack together.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '150g', name: 'Paneer Tikka on Dry Tawa', note: '8 min cook' }
+    ], recipe: {
+      name: 'Paneer Tikka (Tawa Style)',
+      cookTime: '8 min',
+      ingredients: ['150g paneer (thick slices or cubes)', '1 tbsp thick curd', '\u00bd tsp red chilli', '\u00bc tsp turmeric', '\u00bc tsp garam masala', 'Salt to taste'],
+      steps: ['Mix curd + chilli + turmeric + garam masala + salt.', 'Coat paneer pieces in this marinade. Rest 5 min.', 'Heat a dry tawa/pan on high.', 'Place paneer pieces. Don\u2019t move for 2 min (let a crust form).', 'Flip, cook 2 more min.', 'Nice charred spots = done. Eat hot.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '3 eggs', name: 'Egg Drop Soup', note: '5 min cook' },
+      { qty: '100g', name: 'Seared Paneer Cubes', note: 'Side' }
+    ], recipe: {
+      name: 'Egg Drop Soup + Seared Paneer',
+      cookTime: '8 min total',
+      ingredients: ['3 eggs', '2 cups water', '1 tbsp soy sauce', '\u00bc tsp black pepper', '1 spring onion (sliced)', 'Salt to taste', '100g paneer (cubes)'],
+      steps: ['Boil 2 cups water. Add soy sauce, pepper, salt.', 'Beat 3 eggs in a bowl.', 'Slowly pour beaten eggs into boiling water in a thin stream, stirring gently.', 'Eggs will form silky ribbons. Cook 1 min.', 'Add spring onion. Serve in a bowl.', 'Separately: sear 100g paneer cubes on dry tawa, 2 min per side, with salt. Serve alongside soup.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '100g', name: 'Warm Curd', note: '' }
+    ], recipe: {
+      name: 'Warm Night Curd',
+      cookTime: '1 min',
+      ingredients: ['100g curd'],
+      steps: ['Microwave 15-20 sec (just remove chill). Eat plain.']
+    }},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ],
+  6: [
+    { id: 'morning', title: 'Morning Routine', time: '6:00 AM', items: [
+      { qty: '200ml warm', name: 'Lemon water', note: 'First thing' },
+      { qty: '1 tsp in warm water', name: 'Ajwain (carom seeds) water', note: '10 min after lemon water' }
+    ]},
+    { id: 'breakfast', title: 'Breakfast', time: '6:45 AM', items: [
+      { qty: '2 eggs + 100g paneer', name: 'Egg-Paneer Scramble', note: '5 min cook' }
+    ], recipe: {
+      name: 'Egg-Paneer Scramble',
+      cookTime: '5 min',
+      ingredients: ['2 eggs', '100g paneer (crumbled)', '\u00bc tsp turmeric', 'Salt to taste', '1 green chilli (optional)'],
+      steps: ['Heat a pan on medium.', 'Crack 2 eggs in, add crumbled paneer immediately.', 'Scramble everything together with turmeric + salt + chilli.', 'Cook 3-4 min, stirring. The paneer and egg become one dish.', 'Serve hot.']
+    }},
+    { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
+      { qty: '200g', name: 'Hung Curd + Roasted Cumin', note: 'Carry in dabba' }
+    ], recipe: {
+      name: 'Hung Curd Snack',
+      cookTime: '2 min (set overnight)',
+      ingredients: ['200g curd (hung overnight)', '\u00bd tsp roasted cumin', 'Salt to taste'],
+      steps: ['Night before: hang 250g curd in cloth over bowl. Fridge overnight.', 'Morning: add cumin + salt to the thick hung curd. Pack in dabba.']
+    }},
+    { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
+      { qty: '250g raw', name: 'Jeera Chicken', note: 'Measure chicken raw' },
+      { qty: '150g', name: 'Mixed Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Jeera Chicken + Mixed Veggies',
+      cookTime: '15 min',
+      ingredients: ['250g chicken breast (cubed)', '1 tbsp cumin seeds (jeera)', '1 small onion (sliced)', '4 cloves garlic (sliced)', '\u00bc tsp turmeric', 'Salt to taste', '150g mixed vegetables'],
+      steps: ['Heat a dry pan on medium. Add cumin seeds, toast till fragrant (30 sec).', 'Add sliced onion + garlic. Cook 2 min.', 'Add chicken + turmeric + salt. Stir.', 'Cook 10 min on medium, stirring occasionally, till chicken is done and slightly dry.', 'The cumin should be the dominant flavour \u2014 generous jeera.', 'Boil/steam 150g mixed veggies. Pack both.']
+    }},
+    { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
+      { qty: '2 eggs', name: 'Masala Egg Fry', note: 'Chettinad pepper style, 10 min' }
+    ], recipe: {
+      name: 'Chettinad Masala Egg Fry',
+      cookTime: '10 min',
+      ingredients: ['2 eggs', '\u00bd tsp coarsely crushed peppercorns', '5-6 curry leaves', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['Boil 2 eggs (8 min). Peel, halve.', 'Heat a dry pan. Add curry leaves (crackle).', 'Place egg halves cut-side down. Sear 2 min.', 'Flip, add pepper + turmeric + salt.', 'Toss 1 min. Eat hot with the curry leaves.']
+    }},
+    { id: 'dinner', title: 'Dinner', time: '7:30 PM', items: [
+      { qty: '200g', name: 'Paneer Makhani', note: '15 min cook' },
+      { qty: '150g', name: 'Vegetables', note: 'Side' }
+    ], recipe: {
+      name: 'Paneer Makhani (PSMF-friendly) + Veggies',
+      cookTime: '15 min',
+      ingredients: ['200g paneer (cubed)', '2 medium tomatoes (pureed in mixer)', '1 tsp ginger-garlic paste', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', '\u00bd tsp garam masala', '1 tsp dried fenugreek leaves (kasuri methi)', 'Salt to taste', '150g vegetables'],
+      steps: ['Heat pan. Add ginger-garlic paste, fry 30 sec.', 'Add tomato puree + turmeric + chilli + salt.', 'Cook 5-6 min on medium till tomato reduces and oil separates (if any).', 'Add paneer cubes, fold gently.', 'Add 2 tbsp water if too thick. Simmer 5 min.', 'Crush kasuri methi between palms, sprinkle in. Add garam masala.', 'Traditional makhani uses butter/cream \u2014 skip those. The tomato gravy alone is rich enough.', 'Steam 150g veggies. Serve together.']
+    }},
+    { id: 'night', title: 'Night', time: '9:30 PM', items: [
+      { qty: '1 cup', name: 'Warm Turmeric Water + Pepper', note: 'Zero cal' }
+    ]},
+    { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
+      { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
+    ]}
+  ]
+};
+
+function getRotationDay(day) {
+  return ((day - 1) % 6) + 1;
+}
+
+function getCookingNote(day) {
+  return COOKING_NOTES[getRotationDay(day)] || '';
+}
+
+function getDepletionMeals(day) {
+  return ROTATION_MEALS[getRotationDay(day)];
+}
+
+function getCarbMeals(day) {
+  var rotDay = getRotationDay(day);
+  var baseMeals = JSON.parse(JSON.stringify(ROTATION_MEALS[rotDay]));
+  var rice = day <= 11 ? '100g cooked' : '120g cooked';
+  baseMeals.forEach(function(meal) {
+    if (meal.id === 'lunch' || meal.id === 'dinner') {
+      meal.items.push({ qty: rice, name: 'Cooked rice', note: 'White or brown' });
+    }
+  });
+  return baseMeals;
 }
 
 // ========== PREP / INGREDIENTS FOR NEXT DAY ==========
 function getIngredientsForDay(day) {
-  if (day > 12) return []; // no next day
+  if (day > 12) return [];
+  var rotDay = getRotationDay(day);
   var items = [];
   items.push({ name: 'Lemon', qty: '1' });
-  items.push({ name: 'Eggs', qty: '3' });
-  items.push({ name: 'Chicken breast (raw)', qty: '500g' });
-  items.push({ name: 'Curd / Hung curd', qty: '300\u2013350g' });
-  items.push({ name: 'Vegetables (spinach/capsicum/onion)', qty: '100\u2013150g' });
-  items.push({ name: 'Vegetables (cabbage/cauliflower/beans)', qty: '300\u2013400g' });
   items.push({ name: 'Ajwain (carom seeds)', qty: '1 tsp' });
   items.push({ name: 'Isabgol (psyllium husk)', qty: '1 tsp' });
-  items.push({ name: 'Salt, pepper, spices', qty: 'normal amounts' });
+  items.push({ name: 'Salt, turmeric, chilli powder, pepper', qty: 'stock check' });
+
+  if (rotDay === 1) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Cauliflower', qty: '1 small' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Tomato', qty: '2\u20133' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Green chilli', qty: '2\u20133' });
+    items.push({ name: 'Coriander leaves', qty: 'small bunch' });
+    items.push({ name: 'Cumin, black salt', qty: 'stock check' });
+  } else if (rotDay === 2) {
+    items.push({ name: 'Eggs', qty: '3' });
+    items.push({ name: 'Chicken breast (raw)', qty: '500g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Beans', qty: '150g' });
+    items.push({ name: 'Spinach', qty: '100g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Garlic', qty: '1 pod' });
+    items.push({ name: 'Pepper (crushed)', qty: '2 tbsp' });
+    items.push({ name: 'Curry leaves', qty: '1 sprig' });
+    items.push({ name: 'Mustard seeds', qty: '1 tsp' });
+  } else if (rotDay === 3) {
+    items.push({ name: 'Eggs', qty: '5' });
+    items.push({ name: 'Minced chicken (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Cabbage', qty: '150g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Tomato', qty: '3\u20134' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Ginger-garlic paste', qty: '1 tbsp' });
+    items.push({ name: 'Garam masala', qty: '1 tsp' });
+  } else if (rotDay === 4) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '250g' });
+    items.push({ name: 'Curd', qty: '200g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Bottle gourd', qty: '150g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Soy sauce', qty: '1 tbsp' });
+    items.push({ name: 'Peppercorns (whole)', qty: '1 tbsp' });
+    items.push({ name: 'Curry leaves', qty: '1 sprig' });
+    items.push({ name: 'Coriander leaves', qty: 'small bunch' });
+  } else if (rotDay === 5) {
+    items.push({ name: 'Eggs', qty: '6' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '200g' });
+    items.push({ name: 'Curd', qty: '300g' });
+    items.push({ name: 'Cauliflower / Beans', qty: '150g' });
+    items.push({ name: 'Capsicum', qty: '1' });
+    items.push({ name: 'Onion', qty: '3\u20134' });
+    items.push({ name: 'Spring onion', qty: '2\u20133 stalks' });
+    items.push({ name: 'Soy sauce', qty: '1 tbsp' });
+    items.push({ name: 'Black salt', qty: 'stock check' });
+  } else if (rotDay === 6) {
+    items.push({ name: 'Eggs', qty: '4' });
+    items.push({ name: 'Chicken breast (raw)', qty: '250g' });
+    items.push({ name: 'Paneer', qty: '300g' });
+    items.push({ name: 'Curd', qty: '400g' });
+    items.push({ name: 'Mixed vegetables', qty: '300g' });
+    items.push({ name: 'Onion', qty: '2\u20133' });
+    items.push({ name: 'Tomato', qty: '2\u20133' });
+    items.push({ name: 'Cumin (whole)', qty: '1 tbsp' });
+  }
+
   if (isCarbDay(day)) {
-    var riceQty = day <= 11 ? '200g cooked (measure for lunch + dinner)' : '240g cooked';
+    var riceQty = day <= 11 ? '200g cooked (for lunch + dinner)' : '240g cooked';
     items.push({ name: 'Rice (white or brown)', qty: riceQty });
   }
   return items;
 }
 
+
 function getAllTaskIds(day) {
-  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  var meals = isDepDay(day) ? getDepletionMeals(day) : getCarbMeals(day);
   return meals.map(function(m){ return m.id; });
 }
 
@@ -377,7 +794,7 @@ function getAllTaskIds(day) {
 function getRulesForDay(day) {
   var rules = [];
   if (day <= 9) {
-    rules.push('\u{1F4A7} Water: 3L today \u00b7 lemon + salt in morning');
+    rules.push('\u{1F4A7} Minimal water morning (avoid washroom mid-commute). Spread 3L from 10 AM onwards.');
     rules.push('\u{1F95B} Curd is non-negotiable');
     rules.push('\u274C Avoid: rice, roti, bread, sugar, fruits, milk, butter, cheese, fried food');
     rules.push('\u2705 Allowed: black coffee/tea (no sugar, max 2 cups), all spices, minimal oil');
@@ -386,7 +803,7 @@ function getRulesForDay(day) {
     if (day >= 7) rules.push('\u{1F3AF} ' + (9 - day) + ' depletion day' + (9-day>1?'s':'') + ' remaining');
     if (day === 9) rules.push('\u2705 Tomorrow you add rice \u2014 not a binge, just 100g at lunch & dinner');
   } else {
-    rules.push('\u{1F4A7} Water: 3L \u2014 keep it up');
+    rules.push('\u{1F4A7} Minimal water morning (avoid washroom mid-commute). Spread 3L from 10 AM onwards.');
     rules.push('\u{1F95B} Curd stays non-negotiable');
     rules.push('\u2705 Same meals as depletion + rice at lunch & dinner');
     rules.push('\u26A0\uFE0F Rice only \u2014 no roti/bread/sweets/fruits yet');
@@ -472,7 +889,7 @@ function renderDayPlan(day) {
   var data = load();
   var checks = data.checks || {};
   var dc = checks[day] || {};
-  var meals = isDepDay(day) ? DEPLETION_MEALS : getCarbMeals(day);
+  var meals = isDepDay(day) ? getDepletionMeals(day) : getCarbMeals(day);
   var allIds = getAllTaskIds(day);
   var doneCount = allIds.filter(function(id){ return dc[id]; }).length;
   var pct = Math.round((doneCount / allIds.length) * 100);
@@ -493,6 +910,15 @@ function renderDayPlan(day) {
   rules.forEach(function(r){ html += '<div class="day-rule">' + r + '</div>'; });
   html += '</div>';
 
+  // Cooking note
+  var cookNote = getCookingNote(day);
+  if (cookNote) {
+    html += '<div class="cooking-note">';
+    html += '<div class="cooking-note-icon">\u{1F373}</div>';
+    html += '<div><div class="cooking-note-label">Morning cooking plan</div>';
+    html += '<div class="cooking-note-text">' + cookNote + '</div></div></div>';
+  }
+
   // Meal blocks as trackable items
   meals.forEach(function(meal) {
     var done = dc[meal.id];
@@ -509,6 +935,21 @@ function renderDayPlan(day) {
       if (item.note) html += '<div class="food-note">' + item.note + '</div>';
       html += '</div></div>';
     });
+    if (meal.recipe) {
+      var r = meal.recipe;
+      html += '<div class="recipe-toggle" onclick="event.stopPropagation();toggleRecipe(this)">\u{1F4D6} Recipe <span class="recipe-chevron">\u25BE</span></div>';
+      html += '<div class="recipe-body">';
+      html += '<div class="recipe-name">' + r.name + '</div>';
+      html += '<div class="recipe-time">\u23F1 ' + r.cookTime + '</div>';
+      html += '<div class="recipe-section-title">Ingredients</div>';
+      html += '<ul class="recipe-ingredients">';
+      r.ingredients.forEach(function(ing) { html += '<li>' + ing + '</li>'; });
+      html += '</ul>';
+      html += '<div class="recipe-section-title">Steps</div>';
+      html += '<ol class="recipe-steps">';
+      r.steps.forEach(function(s) { html += '<li>' + s + '</li>'; });
+      html += '</ol></div>';
+    }
     html += '</div></div>';
   });
 
@@ -527,6 +968,12 @@ function renderDayPlan(day) {
   }
 
   area.innerHTML = html;
+}
+
+function toggleRecipe(btn) {
+  var body = btn.nextElementSibling;
+  body.classList.toggle('open');
+  btn.classList.toggle('open');
 }
 
 function toggleExpand(header) {
@@ -568,6 +1015,7 @@ function toggleTask(day, taskId) {
 
   renderOverview();
 }
+
 
 // ========== SYNC ==========
 function connectSync() {
