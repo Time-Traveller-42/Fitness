@@ -190,6 +190,22 @@
   .cooking-note-icon { font-size: 20px; flex-shrink: 0; line-height: 1; }
   .cooking-note-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); font-weight: 600; margin-bottom: 2px; }
   .cooking-note-text { font-size: 12px; color: var(--muted2); line-height: 1.5; }
+
+  /* WATER TRACKER */
+  .water-tracker { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; }
+  .water-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .water-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; }
+  .water-count { font-size: 13px; font-weight: 600; color: var(--accent); }
+  .water-count .water-litres { font-size: 11px; color: var(--muted); font-weight: 400; }
+  .water-drops { display: flex; gap: 4px; flex-wrap: wrap; }
+  .water-drop { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.15s; user-select: none; -webkit-tap-highlight-color: transparent; border: 1.5px solid var(--border); background: var(--bg); }
+  .water-drop.filled { background: #e0f2f7; border-color: #7ec8e3; transform: scale(1.05); }
+  .water-drop.filled .drop-icon { filter: none; }
+  .water-drop .drop-icon { filter: grayscale(1) opacity(0.3); }
+  .water-progress { height: 4px; background: var(--border); border-radius: 2px; margin-top: 10px; overflow: hidden; }
+  .water-progress-fill { height: 100%; background: linear-gradient(90deg, #7ec8e3, #2d8ab5); border-radius: 2px; transition: width 0.3s; }
+  .water-reset { font-size: 10px; color: var(--muted); cursor: pointer; padding: 2px 6px; border-radius: 4px; background: none; border: 1px solid var(--border); font-family: var(--font-sans); }
+  .water-reset:active { background: var(--border); }
 </style>
 </head>
 <body>
@@ -966,6 +982,9 @@ function renderDayPlan(day) {
   html += '<div class="day-sub">' + phaseLabel + ' \u00b7 ' + doneCount + '/' + allIds.length + ' done</div>';
   html += '<div class="progress-bar"><div class="progress-fill ' + (isDepDay(day)?'dep':'carb') + '" style="width:' + pct + '%"></div></div></div>';
 
+  // Water tracker
+  html += renderWaterTracker(day);
+
   // Rules inline
   html += '<div class="day-rules ' + (isCarbDay(day)?'carbup-rules':'') + '">';
   html += '<div class="day-rules-title">' + (isDepDay(day) ? '\u{1F7E2} Day ' + day + ' rules' : '\u{1F7E0} Day ' + day + ' rules') + '</div>';
@@ -1030,6 +1049,65 @@ function renderDayPlan(day) {
   }
 
   area.innerHTML = html;
+}
+
+
+// ========== WATER TRACKER ==========
+function getWaterCount(day) {
+  var data = load();
+  if (!data.water) return 0;
+  var today = 'day_' + day;
+  return data.water[today] || 0;
+}
+
+function setWaterCount(day, count) {
+  var data = load();
+  if (!data.water) data.water = {};
+  data.water['day_' + day] = count;
+  save(data);
+}
+
+function tapWater(day, index) {
+  var current = getWaterCount(day);
+  // If tapping the last filled drop, unfill it (subtract). Otherwise fill up to that drop.
+  if (index + 1 === current) {
+    setWaterCount(day, current - 1);
+  } else {
+    setWaterCount(day, index + 1);
+  }
+  // Update in-place
+  var container = document.getElementById('water-tracker-area');
+  if (container) container.outerHTML = renderWaterTracker(day);
+}
+
+function resetWater(day) {
+  setWaterCount(day, 0);
+  var container = document.getElementById('water-tracker-area');
+  if (container) container.outerHTML = renderWaterTracker(day);
+}
+
+function renderWaterTracker(day) {
+  var total = 12; // 12 glasses of 250ml = 3L
+  var filled = getWaterCount(day);
+  var litres = (filled * 0.25).toFixed(filled % 4 === 0 ? 1 : 2);
+  var pct = Math.round((filled / total) * 100);
+  var html = '<div class="water-tracker" id="water-tracker-area">';
+  html += '<div class="water-header">';
+  html += '<div class="water-title">\u{1F4A7} Water tracker</div>';
+  html += '<div style="display:flex;align-items:center;gap:8px">';
+  html += '<div class="water-count">' + filled + '/' + total + ' <span class="water-litres">(' + litres + 'L of 3L)</span></div>';
+  if (filled > 0) html += '<button class="water-reset" onclick="event.stopPropagation();resetWater(' + day + ')">Reset</button>';
+  html += '</div></div>';
+  html += '<div class="water-drops">';
+  for (var i = 0; i < total; i++) {
+    var cls = i < filled ? 'water-drop filled' : 'water-drop';
+    html += '<div class="' + cls + '" onclick="tapWater(' + day + ',' + i + ')"><span class="drop-icon">\u{1F4A7}</span></div>';
+  }
+  html += '</div>';
+  html += '<div class="water-progress"><div class="water-progress-fill" style="width:' + pct + '%"></div></div>';
+  if (pct >= 100) html += '<div style="text-align:center;font-size:11px;color:var(--accent);margin-top:6px;font-weight:600">\u2705 3L done!</div>';
+  html += '</div>';
+  return html;
 }
 
 function toggleRecipe(btn) {
