@@ -1375,24 +1375,58 @@ function buildHeaderVariants(file) {
   }).catch(function() { return { variants: [], meanSat: 0 }; });
 }
 
-// Pull the standalone bodyweight (40-200, not a % and not the "Goal:" line) from a
-// header OCR text block. Prefers a number on a line that also says "kg".
+// Pull the standalone bodyweight from a header OCR text block.
+//
+// The header layout is, in order: "< Weight ...", a date/time line ("Sep 01 06:45"),
+// then the BIG WEIGHT on its own line ("93 kg" / "93." / "93"), then the BF% line
+// ("30.7%BF%"), then a chart with more dates/times, then "Goal: 80.5kg".
+//
+// Pitfalls this must avoid: time fragments like "06:45" and bare minutes ("45"),
+// the goal weight (80.5), and the BF% number. Strategy:
+//   1. Strip time-of-day tokens (HH:MM) so "06:45" can't leak "45".
+//   2. Find the date line; the weight is the FIRST plausible number on the 1-2 lines
+//      immediately after it (that's the big header number, before the BF% line).
+//   3. Fallback: first line that has "kg" (excluding Goal), take its number.
 function weightFromHeaderText(txt) {
-  var best = null, kgHit = false;
-  var lines = (txt || '').split('\n');
-  for (var li = 0; li < lines.length; li++) {
-    var line = lines[li];
-    if (/goal/i.test(line) || /%/.test(line)) continue;   // skip Goal + BF% lines
+  var rawLines = (txt || '').split('\n');
+  // Remove HH:MM time tokens everywhere so minutes can't be mistaken for weight.
+  var lines = rawLines.map(function(l) { return l.replace(/\b\d{1,2}:\d{2}\b/g, ' '); });
+
+  function plausible(line) {
+    if (/goal/i.test(line)) return null;
     var re = /(\d{2,3}(?:\.\d{1,2})?)/g, m;
     while ((m = re.exec(line)) !== null) {
       var v = parseFloat(m[1]);
-      if (v >= 40 && v <= 200) {
-        if (/k\s*g/i.test(line)) { best = v; kgHit = true; }
-        else if (!kgHit && best == null) best = v;
-      }
+      if (v >= 40 && v <= 200) return v;   // first plausible bodyweight on the line
+    }
+    return null;
+  }
+
+  var monthRe = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
+
+  // 1) Positional: number on the 1-2 lines right after the FIRST date line, but not a
+  //    "%"/BF line (that's the line after the weight).
+  var dateIdx = -1;
+  for (var i = 0; i < lines.length; i++) {
+    if (monthRe.test(lines[i])) { dateIdx = i; break; }
+  }
+  if (dateIdx !== -1) {
+    for (var j = dateIdx + 1; j <= dateIdx + 2 && j < lines.length; j++) {
+      if (/%/.test(lines[j])) break;        // reached the BF% line; weight was before it
+      var v = plausible(lines[j]);
+      if (v != null) return v;
     }
   }
-  return best;
+
+  // 2) Fallback: first "kg" line that isn't the goal.
+  for (var k = 0; k < lines.length; k++) {
+    if (/goal/i.test(lines[k]) || /%/.test(lines[k])) continue;
+    if (/k\s*g/i.test(lines[k])) {
+      var v2 = plausible(lines[k]);
+      if (v2 != null) return v2;
+    }
+  }
+  return null;
 }
 
 // Run the header pass: OCR each binarized variant in turn, stop at the first that
