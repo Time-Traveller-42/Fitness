@@ -1294,92 +1294,135 @@ function preprocessImage(file) {
 
 // Dedicated header pass. The big weight is WHITE text on a SATURATED COLORED
 // background (blue gradient). A plain grayscale+contrast turns that into low-contrast
-// grey-on-grey, so the thick digits merge/clip ("93" -> "03"). Here we instead:
-//   1. crop the top colored band (top ~28% of the image),
-//   2. classify each pixel: near-white & bright  => TEXT (black),
-//      everything else (the colored bg)          => BACKGROUND (white),
-//   3. upscale heavily so the large glyphs are crisp.
-// The result is clean black digits on white, which Tesseract reads reliably.
-// Returns { dataUrl } or null if no colored header band is detected.
-function preprocessHeader(file) {
+// grey-on-grey, so the thick digits merge/clip ("93" -> "03").
+//
+// Robustness strategy: we don't gamble on a single crop + single threshold. We crop a
+// generous top band, then produce SEVERAL binarized variants at different brightness
+// thresholds (plus an inverted grayscale variant for non-colored/white headers). Each
+// variant is OCR'd; we keep the first that yields a valid bodyweight. Different phones
+// render the gradient at different brightness, so trying a spread of thresholds makes
+// the read succeed regardless of device.
+//
+// Returns an array of { dataUrl, label } variants to OCR, plus meanSat for diagnostics.
+function buildHeaderVariants(file) {
   return loadImage(file).then(function(img) {
     var srcW = img.width, srcH = img.height;
-    var bandH = Math.round(srcH * 0.30);          // top band that holds the header
+    var bandH = Math.round(srcH * 0.34);          // generous top band (holds the header)
     var tmp = document.createElement('canvas');
     tmp.width = srcW; tmp.height = bandH;
     var tctx = tmp.getContext('2d');
     tctx.drawImage(img, 0, 0, srcW, bandH, 0, 0, srcW, bandH);
-    var band = tctx.getImageData(0, 0, srcW, bandH);
-    var bd = band.data;
+    var base = tctx.getImageData(0, 0, srcW, bandH);
+    var bd = base.data;
 
-    // Is this band actually a colored header? Measure mean saturation. If it's mostly
-    // white (a plain-white app theme), skip the header pass and let the full pass do it.
+    // Mean saturation tells us if the header is colored (white text on blue) or a
+    // plain/white theme. We build variants for both cases so either works.
     var satSum = 0, n = 0;
     for (var p = 0; p < bd.length; p += 4) {
-      var r = bd[p], g = bd[p + 1], b = bd[p + 2];
-      var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
-      satSum += mx === 0 ? 0 : (mx - mn) / mx;
-      n++;
+      var mx = Math.max(bd[p], bd[p + 1], bd[p + 2]), mn = Math.min(bd[p], bd[p + 1], bd[p + 2]);
+      satSum += mx === 0 ? 0 : (mx - mn) / mx; n++;
     }
     var meanSat = satSum / n;
-    if (meanSat < 0.12) return null;              // not a colored header
 
-    // Binarize: white text -> black, colored bg -> white.
-    for (var i = 0; i < bd.length; i += 4) {
-      var rr = bd[i], gg = bd[i + 1], bb = bd[i + 2];
-      var mxx = Math.max(rr, gg, bb), mnn = Math.min(rr, gg, bb);
-      var bright = 0.299 * rr + 0.587 * gg + 0.114 * bb;
-      var sat = mxx === 0 ? 0 : (mxx - mnn) / mxx;
-      var isText = bright > 175 && sat < 0.22;     // near-white, low saturation
-      var out = isText ? 0 : 255;
-      bd[i] = bd[i + 1] = bd[i + 2] = out;
-      bd[i + 3] = 255;
-    }
-    tctx.putImageData(band, 0, 0);
-
-    // Upscale the binarized band ~3x for crisp large glyphs.
-    var up = Math.max(2, Math.min(4, 1800 / srcW));
+    var up = Math.max(2, Math.min(4, 2000 / srcW));   // upscale big glyphs for OCR
     var ow = Math.round(srcW * up), oh = Math.round(bandH * up);
-    var out = document.createElement('canvas');
-    out.width = ow; out.height = oh;
-    var octx = out.getContext('2d');
-    octx.imageSmoothingEnabled = true;
-    octx.drawImage(tmp, 0, 0, ow, oh);
-    return { dataUrl: out.toDataURL('image/png') };
-  }).catch(function() { return null; });
+
+    // Render one binarized variant. mode 'white' = keep near-white bright pixels as
+    // text (for colored headers). mode 'dark' = keep dark pixels as text (white theme).
+    function variant(threshold, mode) {
+      var work = document.createElement('canvas');
+      work.width = srcW; work.height = bandH;
+      var wctx = work.getContext('2d');
+      var id = wctx.createImageData(srcW, bandH);
+      var od = id.data;
+      for (var i = 0; i < bd.length; i += 4) {
+        var rr = bd[i], gg = bd[i + 1], bb = bd[i + 2];
+        var bright = 0.299 * rr + 0.587 * gg + 0.114 * bb;
+        var isText = (mode === 'white') ? (bright >= threshold) : (bright <= threshold);
+        var v = isText ? 0 : 255;
+        od[i] = od[i + 1] = od[i + 2] = v; od[i + 3] = 255;
+      }
+      wctx.putImageData(id, 0, 0);
+      var out = document.createElement('canvas');
+      out.width = ow; out.height = oh;
+      var octx = out.getContext('2d');
+      octx.imageSmoothingEnabled = true;
+      octx.drawImage(work, 0, 0, ow, oh);
+      return { dataUrl: out.toDataURL('image/png'), label: mode + '@' + threshold };
+    }
+
+    var variants = [];
+    if (meanSat >= 0.10) {
+      // Colored header: white text. Sweep thresholds — phones vary in brightness.
+      variants.push(variant(150, 'white'));
+      variants.push(variant(175, 'white'));
+      variants.push(variant(200, 'white'));
+      variants.push(variant(130, 'white'));
+    } else {
+      // White/plain header: dark text. Sweep dark thresholds.
+      variants.push(variant(120, 'dark'));
+      variants.push(variant(90, 'dark'));
+      variants.push(variant(150, 'dark'));
+    }
+    // Always include a plain upscaled grayscale as a last resort (no binarization).
+    var gray = document.createElement('canvas');
+    gray.width = ow; gray.height = oh;
+    var gctx = gray.getContext('2d');
+    gctx.imageSmoothingEnabled = true;
+    gctx.drawImage(tmp, 0, 0, ow, oh);
+    variants.push({ dataUrl: gray.toDataURL('image/png'), label: 'grayscale' });
+
+    return { variants: variants, meanSat: meanSat };
+  }).catch(function() { return { variants: [], meanSat: 0 }; });
 }
 
-// Run the header pass and pull the bodyweight out of it. The band contains the date,
-// the big "NN kg" (or "NN.NN kg"), and "NN.N%BF%". We want the standalone weight:
-// a number in 40-200 that is NOT a percentage and NOT the "Goal: 80.5kg" line.
-function readHeaderWeight(file) {
-  return preprocessHeader(file).then(function(res) {
-    if (!res) { window.__ocrHeaderWeight = null; return null; }
-    return Tesseract.recognize(res.dataUrl, 'eng', {
-      logger: function() {},
-      tessedit_char_whitelist: '0123456789.kgKG %',
-      tessedit_pageseg_mode: '6'   // assume a uniform block of text
-    }).then(function(r) {
-      var txt = r.data.text || '';
-      console.log('OCR header text:', txt);
-      var best = null;
-      var lines = txt.split('\n');
-      for (var li = 0; li < lines.length; li++) {
-        var line = lines[li];
-        if (/goal/i.test(line) || /%/.test(line)) continue;   // skip Goal + BF% lines
-        var re = /(\d{2,3}(?:\.\d{1,2})?)/g, m;
-        while ((m = re.exec(line)) !== null) {
-          var v = parseFloat(m[1]);
-          if (v >= 40 && v <= 200) {
-            // Prefer a value on a line that also mentions kg; else keep the largest.
-            if (/k\s*g/i.test(line)) { best = v; }
-            else if (best == null) best = v;
-          }
-        }
+// Pull the standalone bodyweight (40-200, not a % and not the "Goal:" line) from a
+// header OCR text block. Prefers a number on a line that also says "kg".
+function weightFromHeaderText(txt) {
+  var best = null, kgHit = false;
+  var lines = (txt || '').split('\n');
+  for (var li = 0; li < lines.length; li++) {
+    var line = lines[li];
+    if (/goal/i.test(line) || /%/.test(line)) continue;   // skip Goal + BF% lines
+    var re = /(\d{2,3}(?:\.\d{1,2})?)/g, m;
+    while ((m = re.exec(line)) !== null) {
+      var v = parseFloat(m[1]);
+      if (v >= 40 && v <= 200) {
+        if (/k\s*g/i.test(line)) { best = v; kgHit = true; }
+        else if (!kgHit && best == null) best = v;
       }
-      window.__ocrHeaderWeight = best;
-      return best;
-    }).catch(function() { window.__ocrHeaderWeight = null; return null; });
+    }
+  }
+  return best;
+}
+
+// Run the header pass: OCR each binarized variant in turn, stop at the first that
+// yields a valid weight. Stores the winning value on window.__ocrHeaderWeight and the
+// combined debug text on window.__ocrHeaderDebug (surfaced in the UI for tuning).
+function readHeaderWeight(file) {
+  window.__ocrHeaderWeight = null;
+  window.__ocrHeaderDebug = '';
+  return buildHeaderVariants(file).then(function(res) {
+    var variants = res.variants || [];
+    var debug = 'meanSat=' + res.meanSat.toFixed(3) + '\n';
+    var idx = 0;
+    function tryNext() {
+      if (idx >= variants.length) { window.__ocrHeaderDebug = debug; return null; }
+      var vnt = variants[idx++];
+      return Tesseract.recognize(vnt.dataUrl, 'eng', {
+        logger: function() {},
+        tessedit_char_whitelist: '0123456789.kg %',
+        tessedit_pageseg_mode: '11'   // sparse text: find as much text as possible
+      }).then(function(r) {
+        var txt = (r.data.text || '').trim();
+        var w = weightFromHeaderText(txt);
+        debug += '[' + vnt.label + '] ' + JSON.stringify(txt) + ' -> ' + w + '\n';
+        console.log('OCR header [' + vnt.label + ']:', txt, '->', w);
+        if (w != null) { window.__ocrHeaderWeight = w; window.__ocrHeaderDebug = debug; return w; }
+        return tryNext();
+      }).catch(function() { return tryNext(); });
+    }
+    return tryNext();
   });
 }
 
@@ -1391,18 +1434,20 @@ function ocrImport(event) {
   showOcrStatus('Loading OCR engine...');
 
   function runOcr() {
-    showOcrStatus('Preparing image...');
+    showOcrStatus('Reading weight...');
     window.__ocrHeaderWeight = null;
-    // Run the header (weight) pass and the full-page pass together. The header pass
-    // reads the big white-on-blue weight cleanly; the full pass reads the card metrics.
-    var headerPass = readHeaderWeight(file).catch(function() { return null; });
-    var fullPass = preprocessImage(file).then(function(processed) {
-      showOcrStatus('Reading image...');
-      return Tesseract.recognize(processed, 'eng', { logger: function() {} });
-    });
-    Promise.all([headerPass, fullPass])
-      .then(function(results) {
-        var text = results[1].data.text;
+    // Run sequentially (mobile-friendly): header pass first (tries several binarized
+    // variants until it reads the big white-on-blue weight), then the full-page pass
+    // for the card metrics. Sequential avoids overlapping Tesseract runs on phones.
+    readHeaderWeight(file).catch(function() { return null; })
+      .then(function() {
+        showOcrStatus('Reading metrics...');
+        return preprocessImage(file).then(function(processed) {
+          return Tesseract.recognize(processed, 'eng', { logger: function() {} });
+        });
+      })
+      .then(function(result) {
+        var text = result.data.text;
         console.log('OCR raw text:', text);
         parseScaleData(text);
       }).catch(function(err) {
@@ -1496,7 +1541,7 @@ function parseScaleData(text) {
     }
   }
 
-  // Body fat mass in kg (right column of the Biological-age row). 5-80. Used to derive weight.
+  // Body fat mass in kg (right column of the Biological-age row). 5-80. Its own field.
   var bodyFatKg = extract(/(^|\s)body fat(\s|$)/i, { reject: /percentage|%/i, min: 5, max: 80 });
 
   // Visceral fat index (int). 1-60.
@@ -1546,51 +1591,35 @@ function parseScaleData(text) {
   }
 
   // --- WEIGHT ---
-  // 1) Prefer the header weight: a "NN.NN kg" not preceded by "Goal", in 40-200 range.
-  //    With preprocessing the header often reads now; if several match, the header is
-  //    typically the largest realistic bodyweight.
-  var weight = null, weightSource = '';
+  // Weight is ONLY ever read from the screenshot. It is never calculated, derived,
+  // or inferred from other metrics. If OCR can't read it, the field is left blank.
+  var weight = null;
 
-  // 1a) Header weight by position: it sits just under the date line and right above
-  //     the "BF%" line, e.g. "Jun 15 06:34" / "90.75." / "29.9%BF%". OCR often drops
-  //     the "kg" (reads "90.75."), so match a standalone number here, not "NN kg".
-  var dateLineIdx = -1;
-  for (var wi = 0; wi < lines.length; wi++) {
-    if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i.test(lines[wi])) { dateLineIdx = wi; break; }
-  }
-  // Read a plausible bodyweight (40-200) from the two lines under the date, in case
-  // the full-page pass happened to catch it. The dedicated header pass (step 2) is
-  // authoritative and overrides this when it succeeds.
-  if (dateLineIdx !== -1) {
-    for (var wj = dateLineIdx + 1; wj <= dateLineIdx + 2 && wj < lines.length; wj++) {
-      if (/goal/i.test(lines[wj]) || /%/.test(lines[wj])) continue;
-      var wn = numsIn(lines[wj]);
-      for (var wq = 0; wq < wn.length; wq++) {
-        if (weight == null && wn[wq] >= 40 && wn[wq] <= 200) { weight = wn[wq]; weightSource = 'ocr'; }
-      }
-      if (weight != null) break;
-    }
+  // Source 1 (authoritative): dedicated header-band pass. The big header weight is
+  // white text on a colored gradient; the header pass binarizes it and reads the
+  // digits cleanly (e.g. "93 kg") even when the full-page pass misreads it ("03 kg").
+  if (window.__ocrHeaderWeight != null && window.__ocrHeaderWeight >= 40 && window.__ocrHeaderWeight <= 200) {
+    weight = window.__ocrHeaderWeight;
   }
 
-  // 1b) Fallback scan: any "NN.NN kg" not preceded by "Goal" and not equal to the LBM
-  //     value we already read (so LBM's "63.1 kg" can't masquerade as weight).
+  // Source 2 (fallback, still pure OCR): the weight as it appears in the full-page
+  // text, on the line(s) directly under the date, e.g. "Sep 01 06:45" / "93 kg".
+  // Skip the "Goal:" and "%BF%" lines. No math — just the number the OCR read.
   if (weight == null) {
-    var wRe = /(\d{2,3}(?:\.\d{1,2})?)\s*k/gi, wm, wCand = [];
-    while ((wm = wRe.exec(clean)) !== null) {
-      var pre = clean.substring(Math.max(0, wm.index - 12), wm.index).toLowerCase();
-      var val = parseFloat(wm[1]);
-      if (pre.indexOf('goal') === -1 && val >= 40 && val <= 200 && (lbm == null || Math.abs(val - lbm) > 0.05)) wCand.push(val);
+    var dateLineIdx = -1;
+    for (var wi = 0; wi < lines.length; wi++) {
+      if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i.test(lines[wi])) { dateLineIdx = wi; break; }
     }
-    if (wCand.length) { weight = Math.max.apply(null, wCand); weightSource = 'ocr'; }
-  }
-
-  // 2) Header-band second pass. The big header weight is white text on a colored
-  //    gradient and often misreads in the full-page pass (e.g. "93" -> "03"). If a
-  //    dedicated header OCR pass ran, it provides a clean digits-only reading that we
-  //    trust over the full-page value.
-  if (window.__ocrHeaderWeight != null) {
-    var hw = window.__ocrHeaderWeight;
-    if (hw >= 40 && hw <= 200) { weight = hw; weightSource = 'header'; }
+    if (dateLineIdx !== -1) {
+      for (var wj = dateLineIdx + 1; wj <= dateLineIdx + 2 && wj < lines.length; wj++) {
+        if (/goal/i.test(lines[wj]) || /%/.test(lines[wj])) continue;
+        var wn = numsIn(lines[wj]);
+        for (var wq = 0; wq < wn.length; wq++) {
+          if (weight == null && wn[wq] >= 40 && wn[wq] <= 200) { weight = wn[wq]; }
+        }
+        if (weight != null) break;
+      }
+    }
   }
 
   if (weight != null) document.getElementById('weight-input').value = weight;
@@ -1610,7 +1639,12 @@ function parseScaleData(text) {
     bmr != null && ('BMR: ' + bmr)
   ].filter(Boolean);
 
-  var rawBlock = '<details style="margin-top:6px;font-size:10px"><summary>Raw OCR text</summary><pre style="max-height:120px;overflow:auto;white-space:pre-wrap">' + text.replace(/</g, '&lt;') + '</pre></details>';
+  var headerDbg = (window.__ocrHeaderDebug || '(none)');
+  var rawBlock = '<details style="margin-top:6px;font-size:10px"><summary>Raw OCR text</summary>' +
+    '<div style="font-weight:600;margin-top:4px">Header pass (weight):</div>' +
+    '<pre style="max-height:120px;overflow:auto;white-space:pre-wrap">' + headerDbg.replace(/</g, '&lt;') + '</pre>' +
+    '<div style="font-weight:600;margin-top:4px">Full page:</div>' +
+    '<pre style="max-height:120px;overflow:auto;white-space:pre-wrap">' + text.replace(/</g, '&lt;') + '</pre></details>';
 
   if (found.length === 0) {
     showOcrStatus('Could not extract values \u2014 enter them manually.' + rawBlock, true);
