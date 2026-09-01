@@ -1323,22 +1323,50 @@ function buildHeaderVariants(file) {
     }
     var meanSat = satSum / n;
 
-    var up = Math.max(2, Math.min(4, 2000 / srcW));   // upscale big glyphs for OCR
+    var up = Math.max(3, Math.min(5, 2600 / srcW));   // upscale big glyphs a lot for OCR
     var ow = Math.round(srcW * up), oh = Math.round(bandH * up);
 
-    // Render one binarized variant. mode 'white' = keep near-white bright pixels as
-    // text (for colored headers). mode 'dark' = keep dark pixels as text (white theme).
-    function variant(threshold, mode) {
+    // Binarize into a 0/255 mask at the source resolution. 255 = text pixel.
+    // mode 'white' = bright pixels are text (colored header); 'dark' = dark pixels.
+    function mask(threshold, mode) {
+      var m = new Uint8ClampedArray(srcW * bandH);
+      for (var i = 0, px = 0; i < bd.length; i += 4, px++) {
+        var bright = 0.299 * bd[i] + 0.587 * bd[i + 1] + 0.114 * bd[i + 2];
+        var isText = (mode === 'white') ? (bright >= threshold) : (bright <= threshold);
+        m[px] = isText ? 255 : 0;
+      }
+      return m;
+    }
+
+    // Morphological erode: shrink text by 1px (a text pixel stays text only if all 4
+    // neighbours are text). This THINS thick glyphs so a slightly over-filled "9"
+    // re-opens its loop instead of reading as "0"/"8". This is the key fix for
+    // 93 -> 03 misreads on heavy white digits.
+    function erode(m) {
+      var out = new Uint8ClampedArray(srcW * bandH);
+      for (var y = 0; y < bandH; y++) {
+        for (var x = 0; x < srcW; x++) {
+          var idx = y * srcW + x;
+          if (m[idx] === 0) { out[idx] = 0; continue; }
+          var up1 = y > 0 ? m[idx - srcW] : 0;
+          var dn = y < bandH - 1 ? m[idx + srcW] : 0;
+          var lf = x > 0 ? m[idx - 1] : 0;
+          var rt = x < srcW - 1 ? m[idx + 1] : 0;
+          out[idx] = (up1 && dn && lf && rt) ? 255 : 0;
+        }
+      }
+      return out;
+    }
+
+    // Render a mask (text=255) as black-on-white, upscaled, to a data URL.
+    function maskToUrl(m) {
       var work = document.createElement('canvas');
       work.width = srcW; work.height = bandH;
       var wctx = work.getContext('2d');
       var id = wctx.createImageData(srcW, bandH);
       var od = id.data;
-      for (var i = 0; i < bd.length; i += 4) {
-        var rr = bd[i], gg = bd[i + 1], bb = bd[i + 2];
-        var bright = 0.299 * rr + 0.587 * gg + 0.114 * bb;
-        var isText = (mode === 'white') ? (bright >= threshold) : (bright <= threshold);
-        var v = isText ? 0 : 255;
+      for (var i = 0, px = 0; i < od.length; i += 4, px++) {
+        var v = m[px] ? 0 : 255;   // text -> black, bg -> white
         od[i] = od[i + 1] = od[i + 2] = v; od[i + 3] = 255;
       }
       wctx.putImageData(id, 0, 0);
@@ -1347,23 +1375,38 @@ function buildHeaderVariants(file) {
       var octx = out.getContext('2d');
       octx.imageSmoothingEnabled = true;
       octx.drawImage(work, 0, 0, ow, oh);
-      return { dataUrl: out.toDataURL('image/png'), label: mode + '@' + threshold };
+      return out.toDataURL('image/png');
+    }
+
+    function variant(threshold, mode, thin) {
+      var m = mask(threshold, mode);
+      if (thin) m = erode(m);
+      return { dataUrl: maskToUrl(m), label: mode + '@' + threshold + (thin ? '+thin' : '') };
     }
 
     var variants = [];
     if (meanSat >= 0.10) {
-      // Colored header: white text. Sweep thresholds — phones vary in brightness.
-      variants.push(variant(150, 'white'));
-      variants.push(variant(175, 'white'));
-      variants.push(variant(200, 'white'));
-      variants.push(variant(130, 'white'));
+      // Colored header (white text).
+      // PLAIN variants FIRST: they read cleanly-separated digits AND decimals like
+      // "90.75" correctly (thinning can erode a small decimal point/strokes).
+      // THINNED variants AFTER, as a rescue: they re-open a merged "9" that plain
+      // binarization fuses into "0" (the 93 -> 03 misread). weightFromHeaderText
+      // rejects impossible readings like "03" (parses to 3, < 40) so a bad plain
+      // variant never "wins" and the loop falls through to the thinned rescue.
+      variants.push(variant(175, 'white', false));
+      variants.push(variant(150, 'white', false));
+      variants.push(variant(200, 'white', false));
+      variants.push(variant(175, 'white', true));   // rescue: thinned
+      variants.push(variant(200, 'white', true));
+      variants.push(variant(150, 'white', true));
+      variants.push(variant(220, 'white', true));
     } else {
-      // White/plain header: dark text. Sweep dark thresholds.
-      variants.push(variant(120, 'dark'));
-      variants.push(variant(90, 'dark'));
-      variants.push(variant(150, 'dark'));
+      variants.push(variant(120, 'dark', false));
+      variants.push(variant(150, 'dark', false));
+      variants.push(variant(120, 'dark', true));
+      variants.push(variant(90, 'dark', true));
     }
-    // Always include a plain upscaled grayscale as a last resort (no binarization).
+    // Plain upscaled grayscale as a last resort (no binarization).
     var gray = document.createElement('canvas');
     gray.width = ow; gray.height = oh;
     var gctx = gray.getContext('2d');
