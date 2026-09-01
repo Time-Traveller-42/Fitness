@@ -1432,8 +1432,15 @@ function buildHeaderVariants(file) {
 //   3. Fallback: first line that has "kg" (excluding Goal), take its number.
 function weightFromHeaderText(txt) {
   var rawLines = (txt || '').split('\n');
-  // Remove HH:MM time tokens everywhere so minutes can't be mistaken for weight.
-  var lines = rawLines.map(function(l) { return l.replace(/\b\d{1,2}:\d{2}\b/g, ' '); });
+  var lines = rawLines.map(function(l) {
+    // Remove HH:MM time tokens so minutes can't be mistaken for weight.
+    l = l.replace(/\b\d{1,2}:\d{2}\b/g, ' ');
+    // Thinning/erode can split a glyph pair so OCR emits "9 3 kg" instead of "93 kg".
+    // Join single digits separated by a single space into one number (does not touch
+    // decimals like "90.75", and only collapses digit<->digit gaps).
+    l = l.replace(/(\d)\s(?=\d)/g, '$1');
+    return l;
+  });
 
   function plausible(line) {
     if (/goal/i.test(line)) return null;
