@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>PSMF Kickstart Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="[REDACTED_CONN_STRING]://400;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -213,6 +216,7 @@
 <div class="header">
   <h1>PSMF <em>Kickstart</em></h1>
   <p>12-day protocol &middot; 9 depletion + 3 carb-up</p>
+  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-e &middot; ocr digit-join</p>
 </div>
 
 <nav class="nav">
@@ -403,21 +407,21 @@ var ROTATION_MEALS = {
       steps: ['Heat 1 tsp oil in a pan on medium.', 'Add chopped onion, saut\u00e9 1 min till soft.', 'Add slit green chilli, turmeric, salt.', 'Crack 3 eggs directly into pan, stir immediately with spatula.', 'Keep stirring/scrambling for 2 min until eggs are set but still soft.', 'Garnish with coriander. Serve hot.']
     }},
     { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
-      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+      { qty: '150g', name: 'Paneer Bhurji', note: 'Make extra morning, microwave at office' }
     ], recipe: {
-      name: 'Spiced Curd',
-      cookTime: '2 min (no cook)',
-      ingredients: ['200g fresh curd', '\u00bd tsp roasted cumin powder', '\u00bc tsp black salt', 'Pinch of red chilli powder (optional)'],
-      steps: ['Take 200g curd in a dabba/container.', 'Add roasted cumin, black salt, and chilli powder.', 'Mix well. Cover and refrigerate till you leave.', 'Eat at 10:30 AM at office \u2014 no heating needed.']
+      name: 'Office Paneer Bhurji',
+      cookTime: '3 min extra while cooking breakfast',
+      ingredients: ['150g paneer (crumbled)', '\u00bc tsp turmeric', '\u00bd tsp red chilli powder', 'Salt to taste'],
+      steps: ['While making breakfast, crumble extra 150g paneer into the same pan.', 'Add turmeric, chilli, salt. Toss 2-3 min.', 'Pack in a separate dabba. Microwave 1 min at office before eating.']
     }},
     { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
       { qty: '250g raw', name: 'Chicken Curry', note: 'Measure chicken raw' },
-      { qty: '150g', name: 'Cauliflower', note: 'Side' }
+      { qty: '150g', name: 'Beans', note: 'Side' }
     ], recipe: {
-      name: 'Chicken Curry + Cauliflower',
+      name: 'Chicken Curry + Beans',
       cookTime: '15 min',
-      ingredients: ['250g chicken breast (cubed)', '1 medium onion (sliced)', '1 medium tomato (chopped)', '1 tsp oil', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g cauliflower florets', 'Water as needed'],
-      steps: ['Heat 1 tsp oil in pressure cooker/pan on medium.', 'Add sliced onion, cook 2 min till translucent.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chopped tomato, turmeric, chilli powder, salt. Cook 2 min till tomato softens.', 'Add 250g chicken cubes. Stir to coat in masala.', 'Add \u00bd cup water, cover. Pressure cook 2 whistles OR simmer 10 min.', 'Meanwhile, microwave or boil 150g cauliflower florets (3 min).', 'Add garam masala to chicken, stir. Pack in dabba with cauliflower on the side.']
+      ingredients: ['250g chicken breast (cubed)', '1 medium onion (sliced)', '1 medium tomato (chopped)', '1 tsp oil', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g beans (chopped)', 'Water as needed'],
+      steps: ['Heat 1 tsp oil in pressure cooker/pan on medium.', 'Add sliced onion, cook 2 min till translucent.', 'Add ginger-garlic paste, fry 30 sec.', 'Add chopped tomato, turmeric, chilli powder, salt. Cook 2 min till tomato softens.', 'Add 250g chicken cubes. Stir to coat in masala.', 'Add \u00bd cup water, cover. Pressure cook 2 whistles OR simmer 10 min.', 'Meanwhile, microwave or boil 150g beans (chopped) (3 min).', 'Add garam masala to chicken, stir. Pack in dabba with beans on the side.']
     }},
     { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
       { qty: '150g', name: 'Paneer Bhurji', note: '7 min cook' }
@@ -436,9 +440,9 @@ var ROTATION_MEALS = {
       ingredients: ['3 eggs', '1 medium onion (chopped)', '1 medium tomato (chopped)', '\u00bd tsp turmeric', '1 tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g mixed vegetables', 'Water'],
       steps: ['Boil 3 eggs (10 min). Peel, slit each egg with 2 cuts.', 'Heat a pan, add chopped onion. Dry saut\u00e9 2 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli powder, salt. Cook 2-3 min.', 'Add \u00bd cup water. Bring to simmer.', 'Slide in boiled eggs. Simmer 5 min, spooning gravy over eggs.', 'Finish with garam masala.', 'Steam/boil 150g veggies separately (3 min). Serve alongside.']
     }},
-    { id: 'night', title: 'Night', time: '9:30 PM', items: [
-      { qty: '100g', name: 'Warm Spiced Curd', note: '' }
-    ], recipe: {
+    { id: 'night', title: 'Night (skip)', time: '9:30 PM', items: [
+      { qty: '-', name: 'Skip - straight to isabgol', note: 'Not needed, protein covered' }
+    ], oldRecipe: {
       name: 'Warm Spiced Curd',
       cookTime: '2 min',
       ingredients: ['100g curd', '\u00bc tsp turmeric', 'Pinch of black pepper'],
@@ -495,9 +499,9 @@ var ROTATION_MEALS = {
       ingredients: ['250g chicken breast (cubed)', '100g spinach (washed, roughly chopped)', '4 cloves garlic (minced)', '1 small onion (chopped)', '\u00bd tsp turmeric', '\u00bd tsp garam masala', 'Salt to taste', '150g vegetables'],
       steps: ['Heat pan on medium. Dry saut\u00e9 onion 2 min.', 'Add garlic, cook 30 sec.', 'Add chicken + turmeric + salt. Cook 5 min, stirring.', 'Add chopped spinach. It will wilt down quickly.', 'Add \u00bc cup water. Cover, simmer 8-10 min till chicken is done.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
     }},
-    { id: 'night', title: 'Night', time: '9:30 PM', items: [
-      { qty: '50g', name: 'Paneer in Warm Turmeric Water', note: 'Hot water drink' }
-    ], recipe: {
+    { id: 'night', title: 'Night (skip)', time: '9:30 PM', items: [
+      { qty: '-', name: 'Skip - straight to isabgol', note: 'Not needed, protein covered' }
+    ], oldRecipe: {
       name: 'Paneer Turmeric Water',
       cookTime: '2 min',
       ingredients: ['50g paneer (small cubes)', '1 cup hot water', '\u00bc tsp turmeric', 'Pinch of black pepper'],
@@ -521,12 +525,12 @@ var ROTATION_MEALS = {
       steps: ['Heat 1 tsp oil in a wide pan on medium.', 'Add onion + capsicum. Saut\u00e9 2 min.', 'Add tomato, turmeric, chilli, salt. Cook 2 min till tomato is soft and saucy.', 'Make 3 small wells in the mixture. Crack 1 egg into each.', 'Cover with lid. Cook 3 min till egg whites are set, yolks still slightly soft.', 'Eat directly from pan (or slide onto plate).']
     }},
     { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
-      { qty: '200g', name: 'Hung Curd + Roasted Jeera', note: 'Carry in dabba' }
+      { qty: '2 eggs', name: 'Egg Bhurji', note: 'Make extra morning, microwave at office' }
     ], recipe: {
-      name: 'Hung Curd Snack',
-      cookTime: '5 min prep (set overnight)',
-      ingredients: ['200g curd (hung overnight in muslin/thin cloth)', '\u00bd tsp roasted cumin powder', 'Salt to taste'],
-      steps: ['Night before: tie 250g curd in a thin cloth over a bowl. Refrigerate overnight.', 'Morning: the thick hung curd is ready (~200g after draining).', 'Add roasted cumin + salt. Mix.', 'Transfer to dabba. Carry to office.']
+      name: 'Office Egg Bhurji',
+      cookTime: '3 min extra while cooking breakfast',
+      ingredients: ['2 eggs', '1 small onion (chopped)', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['While making breakfast shakshuka, scramble 2 extra eggs in a corner of the pan.', 'Add onion, turmeric, salt. Quick scramble 2 min.', 'Pack in dabba. Microwave 45 sec at office.']
     }},
     { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
       { qty: '250g raw', name: 'Chicken Keema', note: 'Measure raw' },
@@ -554,9 +558,9 @@ var ROTATION_MEALS = {
       ingredients: ['200g paneer (cubed)', '1 medium onion (chopped)', '2 medium tomatoes (chopped or pureed)', '\u00bd tsp turmeric', '\u00bd tsp red chilli powder', '\u00bd tsp garam masala', '1 tsp ginger-garlic paste', 'Salt to taste', '150g vegetables'],
       steps: ['Dry saut\u00e9 onion 2 min on medium.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomatoes, turmeric, chilli, salt. Cook 4-5 min till tomatoes break down into a gravy.', 'Add paneer cubes. Gently fold in.', 'Add \u00bc cup water if too thick. Simmer 5 min.', 'Finish with garam masala.', 'Steam 150g veggies separately. Serve together.']
     }},
-    { id: 'night', title: 'Night', time: '9:30 PM', items: [
-      { qty: '100g', name: 'Spiced Curd', note: '' }
-    ], recipe: {
+    { id: 'night', title: 'Night (skip)', time: '9:30 PM', items: [
+      { qty: '-', name: 'Skip - straight to isabgol', note: 'Not needed, protein covered' }
+    ], oldRecipe: {
       name: 'Spiced Night Curd',
       cookTime: '1 min',
       ingredients: ['100g curd', '\u00bd tsp roasted cumin', 'Pinch of salt'],
@@ -639,20 +643,20 @@ var ROTATION_MEALS = {
       steps: ['Beat 3 eggs with salt + pepper in a bowl.', 'Mix in chopped capsicum, onion, green chilli.', 'Heat 1 tsp oil in non-stick pan on medium.', 'Pour egg mixture, spread evenly.', 'Cook 2 min, then fold in half (thick omelette style).', 'Cook 1 more min per side. Serve hot.']
     }},
     { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
-      { qty: '200g', name: 'Spiced Curd', note: 'Carry in dabba' }
+      { qty: '80g', name: 'Chicken Bites', note: 'Set aside from lunch prep, microwave at office' }
     ], recipe: {
-      name: 'Spiced Curd',
-      cookTime: '1 min',
-      ingredients: ['200g curd', '\u00bc tsp black salt', 'Pinch of black pepper'],
-      steps: ['Curd in dabba. Add black salt + pepper. Mix. Carry.']
+      name: 'Office Chicken Bites',
+      cookTime: '0 min extra (from lunch prep)',
+      ingredients: ['80g chicken (set aside from do pyaza lunch prep)', 'Pinch of chaat masala'],
+      steps: ['While cooking chicken do pyaza for lunch, set aside 80g cooked chicken pieces in a separate dabba.', 'Sprinkle chaat masala on top.', 'Microwave 1 min at office. Eat hot.']
     }},
     { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
       { qty: '250g raw', name: 'Chicken Do Pyaza', note: 'Measure chicken raw' },
-      { qty: '150g', name: 'Beans / Cauliflower', note: 'Side' }
+      { qty: '150g', name: 'Beans', note: 'Side' }
     ], recipe: {
       name: 'Chicken Do Pyaza + Veggies',
       cookTime: '20 min',
-      ingredients: ['250g chicken breast (cubed)', '2 large onions (one chopped for gravy, one sliced for topping)', '1 medium tomato (chopped)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp red chilli', '\u00bd tsp garam masala', 'Salt to taste', '150g beans or cauliflower'],
+      ingredients: ['250g chicken breast (cubed)', '2 large onions (one chopped for gravy, one sliced for topping)', '1 medium tomato (chopped)', '1 tsp ginger-garlic paste', '\u00bd tsp turmeric', '\u00bd tsp red chilli', '\u00bd tsp garam masala', 'Salt to taste', '150g beans'],
       steps: ['"Do pyaza" = double onion. Two onions used two ways.', 'Heat pan. Add chopped onion (onion 1), cook 3 min.', 'Add ginger-garlic paste, cook 30 sec.', 'Add tomato, turmeric, chilli, salt. Cook 3 min till soft.', 'Add chicken. Stir to coat. Add \u00bc cup water.', 'Cover, cook 10 min on medium.', 'Add sliced onion (onion 2) on top. Cover 3 more min (they steam slightly).', 'Finish with garam masala.', 'Boil/steam 150g veggies. Pack together.']
     }},
     { id: 'snack2', title: 'Evening Snack', time: '5:00 PM', items: [
@@ -672,9 +676,9 @@ var ROTATION_MEALS = {
       ingredients: ['3 eggs', '2 cups water', '1 tbsp soy sauce', '\u00bc tsp black pepper', '1 spring onion (sliced)', 'Salt to taste', '100g paneer (cubes)'],
       steps: ['Boil 2 cups water. Add soy sauce, pepper, salt.', 'Beat 3 eggs in a bowl.', 'Slowly pour beaten eggs into boiling water in a thin stream, stirring gently.', 'Eggs will form silky ribbons. Cook 1 min.', 'Add spring onion. Serve in a bowl.', 'Separately: sear 100g paneer cubes on dry tawa, 2 min per side, with salt. Serve alongside soup.']
     }},
-    { id: 'night', title: 'Night', time: '9:30 PM', items: [
-      { qty: '100g', name: 'Warm Curd', note: '' }
-    ], recipe: {
+    { id: 'night', title: 'Night (skip)', time: '9:30 PM', items: [
+      { qty: '-', name: 'Skip - straight to isabgol', note: 'Not needed, protein covered' }
+    ], oldRecipe: {
       name: 'Warm Night Curd',
       cookTime: '1 min',
       ingredients: ['100g curd'],
@@ -698,12 +702,12 @@ var ROTATION_MEALS = {
       steps: ['Heat a pan on medium.', 'Crack 2 eggs in, add crumbled paneer immediately.', 'Scramble everything together with turmeric + salt + chilli.', 'Cook 3-4 min, stirring. The paneer and egg become one dish.', 'Serve hot.']
     }},
     { id: 'snack1', title: 'Snack \u2014 Carry to Office', time: '10:30 AM', items: [
-      { qty: '200g', name: 'Hung Curd + Roasted Cumin', note: 'Carry in dabba' }
+      { qty: '100g', name: 'Paneer Tikka Bites', note: 'Sear morning, microwave at office' }
     ], recipe: {
-      name: 'Hung Curd Snack',
-      cookTime: '2 min (set overnight)',
-      ingredients: ['200g curd (hung overnight)', '\u00bd tsp roasted cumin', 'Salt to taste'],
-      steps: ['Night before: hang 250g curd in cloth over bowl. Fridge overnight.', 'Morning: add cumin + salt to the thick hung curd. Pack in dabba.']
+      name: 'Office Paneer Tikka Bites',
+      cookTime: '4 min morning',
+      ingredients: ['100g paneer (cubes)', '1 tbsp thick curd', '\u00bd tsp red chilli', '\u00bc tsp turmeric', 'Salt to taste'],
+      steps: ['Toss paneer cubes in curd + chilli + turmeric + salt.', 'Sear on dry tawa 2 min per side while cooking breakfast.', 'Pack in dabba. Microwave 45 sec at office.']
     }},
     { id: 'lunch', title: 'Lunch', time: '12:00 PM', items: [
       { qty: '250g raw', name: 'Jeera Chicken', note: 'Measure chicken raw' },
@@ -731,8 +735,8 @@ var ROTATION_MEALS = {
       ingredients: ['200g paneer (cubed)', '2 medium tomatoes (pureed in mixer)', '1 tsp ginger-garlic paste', '\u00bd tsp red chilli powder', '\u00bc tsp turmeric', '\u00bd tsp garam masala', '1 tsp dried fenugreek leaves (kasuri methi)', 'Salt to taste', '150g vegetables'],
       steps: ['Heat pan. Add ginger-garlic paste, fry 30 sec.', 'Add tomato puree + turmeric + chilli + salt.', 'Cook 5-6 min on medium till tomato reduces and oil separates (if any).', 'Add paneer cubes, fold gently.', 'Add 2 tbsp water if too thick. Simmer 5 min.', 'Crush kasuri methi between palms, sprinkle in. Add garam masala.', 'Traditional makhani uses butter/cream \u2014 skip those. The tomato gravy alone is rich enough.', 'Steam 150g veggies. Serve together.']
     }},
-    { id: 'night', title: 'Night', time: '9:30 PM', items: [
-      { qty: '1 cup', name: 'Warm Turmeric Water + Pepper', note: 'Zero cal' }
+    { id: 'night', title: 'Night (skip)', time: '9:30 PM', items: [
+      { qty: '-', name: 'Skip - straight to isabgol', note: 'Not needed, protein covered' }
     ]},
     { id: 'bedtime', title: 'Bedtime', time: '10:15 PM', items: [
       { qty: '1 tsp in water', name: 'Isabgol (psyllium husk)', note: 'Drink quickly before it thickens' }
@@ -742,7 +746,7 @@ var ROTATION_MEALS = {
 
 
 var COOKING_NOTES = {
-  1: "Burner 1: Chicken curry + cauliflower (15 min). Burner 2: Egg bhurji (5 min). Start chicken first.",
+  1: "Burner 1: Chicken curry + beans (15 min). Burner 2: Egg bhurji (5 min). Start chicken first.",
   2: "Burner 1: Pepper chicken + beans (15 min). Burner 2: Paneer bhurji (7 min).",
   3: "Burner 1: Chicken keema + cabbage (15 min). Burner 2: Shakshuka eggs (7 min).",
   4: "Burner 1: Chicken stir fry + bottle gourd (12 min). Burner 2: Egg keema (10 min). Also sear paneer tikka bites for office snack (3 min on same pan after eggs).",
@@ -790,7 +794,7 @@ function getIngredientsForDay(day) {
     items.push({ name: 'Chicken breast (raw)', qty: '250g' });
     items.push({ name: 'Paneer', qty: '200g' });
     items.push({ name: 'Curd', qty: '400g' });
-    items.push({ name: 'Cauliflower', qty: '1 small' });
+    items.push({ name: 'Beans', qty: '150g' });
     items.push({ name: 'Onion', qty: '3\u20134' });
     items.push({ name: 'Tomato', qty: '2\u20133' });
     items.push({ name: 'Capsicum', qty: '1' });
@@ -837,7 +841,7 @@ function getIngredientsForDay(day) {
     items.push({ name: 'Chicken breast (raw)', qty: '250g' });
     items.push({ name: 'Paneer', qty: '200g' });
     items.push({ name: 'Curd', qty: '300g' });
-    items.push({ name: 'Cauliflower / Beans', qty: '150g' });
+    items.push({ name: 'Beans', qty: '150g' });
     items.push({ name: 'Capsicum', qty: '1' });
     items.push({ name: 'Onion', qty: '3\u20134' });
     items.push({ name: 'Spring onion', qty: '2\u20133 stalks' });
