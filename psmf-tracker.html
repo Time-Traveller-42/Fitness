@@ -216,7 +216,7 @@
 <div class="header">
   <h1>PSMF <em>Kickstart</em></h1>
   <p>12-day protocol &middot; 9 depletion + 3 carb-up</p>
-  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-e &middot; ocr digit-join</p>
+  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-f &middot; ocr weight-confidence</p>
 </div>
 
 <nav class="nav">
@@ -1434,78 +1434,115 @@ function buildHeaderVariants(file) {
 //   2. Find the date line; the weight is the FIRST plausible number on the 1-2 lines
 //      immediately after it (that's the big header number, before the BF% line).
 //   3. Fallback: first line that has "kg" (excluding Goal), take its number.
-function weightFromHeaderText(txt) {
+// Extract the WEIGHT-LINE number from an OCR text block (header pass OR full page).
+// Returns { value, isDecimal, joined } or null. isDecimal=true means it read a real
+// decimal like "91.85" (high confidence — scale weights look like this). joined=true
+// means we had to stitch space-split digits ("9 3" -> "93"), which is lower confidence
+// because thinning that splits digits can also drop/merge others.
+//
+// The weight sits on the line right after the date, before the "%BF%" line. We take
+// that line, strip a trailing dot ("91.85." -> "91.85"), and read the number.
+function weightLineNumber(txt) {
   var rawLines = (txt || '').split('\n');
-  var lines = rawLines.map(function(l) {
-    // Remove HH:MM time tokens so minutes can't be mistaken for weight.
-    l = l.replace(/\b\d{1,2}:\d{2}\b/g, ' ');
-    // Thinning/erode can split a glyph pair so OCR emits "9 3 kg" instead of "93 kg".
-    // Join single digits separated by a single space into one number (does not touch
-    // decimals like "90.75", and only collapses digit<->digit gaps).
-    l = l.replace(/(\d)\s(?=\d)/g, '$1');
-    return l;
-  });
-
-  function plausible(line) {
-    if (/goal/i.test(line)) return null;
-    var re = /(\d{2,3}(?:\.\d{1,2})?)/g, m;
-    while ((m = re.exec(line)) !== null) {
-      var v = parseFloat(m[1]);
-      if (v >= 40 && v <= 200) return v;   // first plausible bodyweight on the line
-    }
-    return null;
-  }
-
   var monthRe = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
 
-  // 1) Positional: number on the 1-2 lines right after the FIRST date line, but not a
-  //    "%"/BF line (that's the line after the weight).
+  // Locate the date line; the weight line is the next non-empty, non-% line.
   var dateIdx = -1;
-  for (var i = 0; i < lines.length; i++) {
-    if (monthRe.test(lines[i])) { dateIdx = i; break; }
+  for (var i = 0; i < rawLines.length; i++) {
+    if (monthRe.test(rawLines[i])) { dateIdx = i; break; }
   }
+  var candLines = [];
   if (dateIdx !== -1) {
-    for (var j = dateIdx + 1; j <= dateIdx + 2 && j < lines.length; j++) {
-      if (/%/.test(lines[j])) break;        // reached the BF% line; weight was before it
-      var v = plausible(lines[j]);
-      if (v != null) return v;
+    for (var j = dateIdx + 1; j <= dateIdx + 2 && j < rawLines.length; j++) {
+      if (/%/.test(rawLines[j])) break;
+      candLines.push(rawLines[j]);
     }
   }
+  // Also allow any explicit "kg" line that isn't the goal, as a secondary source.
+  for (var k = 0; k < rawLines.length; k++) {
+    if (/goal/i.test(rawLines[k]) || /%/.test(rawLines[k])) continue;
+    if (/k\s*g/i.test(rawLines[k])) candLines.push(rawLines[k]);
+  }
 
-  // 2) Fallback: first "kg" line that isn't the goal.
-  for (var k = 0; k < lines.length; k++) {
-    if (/goal/i.test(lines[k]) || /%/.test(lines[k])) continue;
-    if (/k\s*g/i.test(lines[k])) {
-      var v2 = plausible(lines[k]);
-      if (v2 != null) return v2;
+  for (var c = 0; c < candLines.length; c++) {
+    var line = candLines[c];
+    if (/goal/i.test(line)) continue;
+    // strip time tokens, strip a trailing dot after digits ("91.85." -> "91.85 ")
+    var work = line.replace(/\b\d{1,2}:\d{2}\b/g, ' ').replace(/(\d)\.(?=\s|$)/g, '$1 ');
+    // 1) A well-formed decimal weight, e.g. "91.85" / "90.75". Highest confidence.
+    var dm = work.match(/(\d{2,3}\.\d{1,2})/);
+    if (dm) {
+      var dv = parseFloat(dm[1]);
+      if (dv >= 40 && dv <= 200) return { value: dv, isDecimal: true, joined: false };
+    }
+    // 2) A contiguous 2-3 digit integer weight, e.g. "93".
+    var im = work.match(/(?:^|\s)(\d{2,3})(?:\s|kg|$)/i);
+    if (im) {
+      var iv = parseFloat(im[1]);
+      if (iv >= 40 && iv <= 200) return { value: iv, isDecimal: false, joined: false };
+    }
+    // 3) Space-split digits from thinning, e.g. "9 3" -> "93". Lowest confidence.
+    var joinedLine = work.replace(/(\d)\s(?=\d)/g, '$1');
+    var jm = joinedLine.match(/(\d{2,3}(?:\.\d{1,2})?)/);
+    if (jm) {
+      var jv = parseFloat(jm[1]);
+      if (jv >= 40 && jv <= 200) return { value: jv, isDecimal: /\./.test(jm[1]), joined: true };
     }
   }
   return null;
 }
 
-// Run the header pass: OCR each binarized variant in turn, stop at the first that
-// yields a valid weight. Stores the winning value on window.__ocrHeaderWeight and the
-// combined debug text on window.__ocrHeaderDebug (surfaced in the UI for tuning).
+// Back-compat helper used by the variant loop: returns just the numeric value.
+function weightFromHeaderText(txt) {
+  var r = weightLineNumber(txt);
+  return r ? r.value : null;
+}
+
+// Confidence rank for a weight candidate: a real decimal (91.85) is most trustworthy,
+// a clean integer (93) next, a space-joined read (9 3 -> 93) least (thinning that
+// splits digits is unreliable). Higher = better.
+function weightConfidence(cand) {
+  if (!cand) return -1;
+  if (cand.isDecimal && !cand.joined) return 3;
+  if (!cand.joined) return 2;         // clean integer
+  if (cand.isDecimal) return 1;       // joined but has a decimal
+  return 0;                            // joined bare integer (weakest)
+}
+
+// Run the header pass: OCR every binarized variant and keep the HIGHEST-CONFIDENCE
+// weight candidate across all of them (not just the first). A decimal read from any
+// variant beats a space-joined integer. Stores the winner on window.__ocrHeaderWeight
+// and combined debug on window.__ocrHeaderDebug.
 function readHeaderWeight(file) {
   window.__ocrHeaderWeight = null;
+  window.__ocrHeaderWeightCand = null;
   window.__ocrHeaderDebug = '';
   return buildHeaderVariants(file).then(function(res) {
     var variants = res.variants || [];
     var debug = 'meanSat=' + res.meanSat.toFixed(3) + '\n';
+    var best = null;
     var idx = 0;
+    function finish() {
+      window.__ocrHeaderDebug = debug;
+      window.__ocrHeaderWeightCand = best;
+      window.__ocrHeaderWeight = best ? best.value : null;
+      return best ? best.value : null;
+    }
     function tryNext() {
-      if (idx >= variants.length) { window.__ocrHeaderDebug = debug; return null; }
+      if (idx >= variants.length) return finish();
       var vnt = variants[idx++];
       return Tesseract.recognize(vnt.dataUrl, 'eng', {
         logger: function() {},
         tessedit_char_whitelist: '0123456789.kg %',
-        tessedit_pageseg_mode: '11'   // sparse text: find as much text as possible
+        tessedit_pageseg_mode: '11'
       }).then(function(r) {
         var txt = (r.data.text || '').trim();
-        var w = weightFromHeaderText(txt);
-        debug += '[' + vnt.label + '] ' + JSON.stringify(txt) + ' -> ' + w + '\n';
-        console.log('OCR header [' + vnt.label + ']:', txt, '->', w);
-        if (w != null) { window.__ocrHeaderWeight = w; window.__ocrHeaderDebug = debug; return w; }
+        var cand = weightLineNumber(txt);
+        debug += '[' + vnt.label + '] ' + JSON.stringify(txt) + ' -> ' + (cand ? cand.value + (cand.isDecimal ? 'd' : '') + (cand.joined ? 'j' : '') : 'null') + '\n';
+        console.log('OCR header [' + vnt.label + ']:', txt, '->', cand);
+        if (cand && weightConfidence(cand) > weightConfidence(best)) best = cand;
+        // A high-confidence decimal read is definitive — stop early.
+        if (best && best.isDecimal && !best.joined) return finish();
         return tryNext();
       }).catch(function() { return tryNext(); });
     }
@@ -1678,35 +1715,21 @@ function parseScaleData(text) {
   }
 
   // --- WEIGHT ---
-  // Weight is ONLY ever read from the screenshot. It is never calculated, derived,
-  // or inferred from other metrics. If OCR can't read it, the field is left blank.
+  // Weight is ONLY ever read from the screenshot. Never calculated or derived. We
+  // gather weight-line candidates from BOTH the full-page pass and the dedicated
+  // header pass, then pick the HIGHEST-CONFIDENCE one: a clean decimal (e.g. "91.85")
+  // always beats a mangled/space-joined integer (e.g. thinning turning it into "85").
   var weight = null;
 
-  // Source 1 (authoritative): dedicated header-band pass. The big header weight is
-  // white text on a colored gradient; the header pass binarizes it and reads the
-  // digits cleanly (e.g. "93 kg") even when the full-page pass misreads it ("03 kg").
-  if (window.__ocrHeaderWeight != null && window.__ocrHeaderWeight >= 40 && window.__ocrHeaderWeight <= 200) {
-    weight = window.__ocrHeaderWeight;
-  }
+  var fullCand = weightLineNumber(text);                 // from the full-page OCR
+  var headCand = window.__ocrHeaderWeightCand || null;   // best from the header pass
 
-  // Source 2 (fallback, still pure OCR): the weight as it appears in the full-page
-  // text, on the line(s) directly under the date, e.g. "Sep 01 06:45" / "93 kg".
-  // Skip the "Goal:" and "%BF%" lines. No math — just the number the OCR read.
-  if (weight == null) {
-    var dateLineIdx = -1;
-    for (var wi = 0; wi < lines.length; wi++) {
-      if (/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i.test(lines[wi])) { dateLineIdx = wi; break; }
-    }
-    if (dateLineIdx !== -1) {
-      for (var wj = dateLineIdx + 1; wj <= dateLineIdx + 2 && wj < lines.length; wj++) {
-        if (/goal/i.test(lines[wj]) || /%/.test(lines[wj])) continue;
-        var wn = numsIn(lines[wj]);
-        for (var wq = 0; wq < wn.length; wq++) {
-          if (weight == null && wn[wq] >= 40 && wn[wq] <= 200) { weight = wn[wq]; }
-        }
-        if (weight != null) break;
-      }
-    }
+  var wCands = [];
+  if (fullCand) wCands.push(fullCand);
+  if (headCand) wCands.push(headCand);
+  if (wCands.length) {
+    wCands.sort(function(a, b){ return weightConfidence(b) - weightConfidence(a); });
+    weight = wCands[0].value;
   }
 
   if (weight != null) document.getElementById('weight-input').value = weight;
