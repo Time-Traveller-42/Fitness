@@ -216,7 +216,7 @@
 <div class="header">
   <h1>PSMF <em>Kickstart</em></h1>
   <p>12-day protocol &middot; 9 depletion + 3 carb-up</p>
-  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-f &middot; ocr weight-confidence</p>
+  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-g &middot; ocr spaced-decimal</p>
 </div>
 
 <nav class="nav">
@@ -1467,13 +1467,28 @@ function weightLineNumber(txt) {
   for (var c = 0; c < candLines.length; c++) {
     var line = candLines[c];
     if (/goal/i.test(line)) continue;
-    // strip time tokens, strip a trailing dot after digits ("91.85." -> "91.85 ")
-    var work = line.replace(/\b\d{1,2}:\d{2}\b/g, ' ').replace(/(\d)\.(?=\s|$)/g, '$1 ');
+    // Strip time tokens. Normalise an OCR-mangled decimal point: thinning renders the
+    // dot as various glyphs with spaces around it, e.g. "9 1 . 6" or "9 1 ° 6" or
+    // "9 1 ® 6". Collapse "<digit> <sep> <digit>" where sep is a dot-like glyph into a
+    // real decimal: "9 1 . 6" -> "9 1.6". Dot-like glyphs after ASCII-cleaning: . ° º.
+    var work = line.replace(/\b\d{1,2}:\d{2}\b/g, ' ');
+    work = work.replace(/(\d)\s*[.\u00B0\u00BA\u00AE\u00B7]\s*(\d)/g, '$1.$2');
+    // strip a genuine trailing dot after digits ("91.85." -> "91.85 ")
+    work = work.replace(/(\d)\.(?=\s|$)/g, '$1 ');
     // 1) A well-formed decimal weight, e.g. "91.85" / "90.75". Highest confidence.
     var dm = work.match(/(\d{2,3}\.\d{1,2})/);
     if (dm) {
       var dv = parseFloat(dm[1]);
       if (dv >= 40 && dv <= 200) return { value: dv, isDecimal: true, joined: false };
+    }
+    // 1b) Decimal whose integer part is space-split, e.g. "9 1.6" -> "91.6". Collapse
+    //     digit-space-digit then look for a decimal again. Still high confidence
+    //     because a decimal point is present and hard to hallucinate.
+    var deJoined = work.replace(/(\d)\s(?=\d)/g, '$1');
+    var dm2 = deJoined.match(/(\d{2,3}\.\d{1,2})/);
+    if (dm2) {
+      var dv2 = parseFloat(dm2[1]);
+      if (dv2 >= 40 && dv2 <= 200) return { value: dv2, isDecimal: true, joined: true };
     }
     // 2) A contiguous 2-3 digit integer weight, e.g. "93".
     var im = work.match(/(?:^|\s)(\d{2,3})(?:\s|kg|$)/i);
@@ -1482,7 +1497,7 @@ function weightLineNumber(txt) {
       if (iv >= 40 && iv <= 200) return { value: iv, isDecimal: false, joined: false };
     }
     // 3) Space-split digits from thinning, e.g. "9 3" -> "93". Lowest confidence.
-    var joinedLine = work.replace(/(\d)\s(?=\d)/g, '$1');
+    var joinedLine = deJoined;
     var jm = joinedLine.match(/(\d{2,3}(?:\.\d{1,2})?)/);
     if (jm) {
       var jv = parseFloat(jm[1]);
