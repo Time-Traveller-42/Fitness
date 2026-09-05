@@ -216,7 +216,7 @@
 <div class="header">
   <h1>PSMF <em>Kickstart</em></h1>
   <p>12-day protocol &middot; 9 depletion + 3 carb-up</p>
-  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-g &middot; ocr spaced-decimal</p>
+  <p style="font-size:9px;color:var(--muted);letter-spacing:0.08em;margin-top:2px">build 2026-09-01-h &middot; ocr chart-row guard</p>
 </div>
 
 <nav class="nav">
@@ -1444,23 +1444,41 @@ function buildHeaderVariants(file) {
 // that line, strip a trailing dot ("91.85." -> "91.85"), and read the number.
 function weightLineNumber(txt) {
   var rawLines = (txt || '').split('\n');
-  var monthRe = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
 
-  // Locate the date line; the weight line is the next non-empty, non-% line.
+  // A line that has 2+ HH:MM tokens is the chart x-axis row (e.g.
+  // "42 06:24 06:09 07:53") or a chart label — never the weight. Exclude it.
+  function isChartRow(l) { return (l.match(/\d{1,2}:\d{2}/g) || []).length >= 2; }
+
+  // The HEADER date line looks like "Sep 05 07:53" — a month + day + ONE time. The
+  // chart axis "02 Sep 03 Sep 04 Sep 05" has multiple months and no time, so we
+  // require a time token on (or glued to) the date line and pick the FIRST match.
+  // Allow the day to glue to the time, e.g. "Sep 0507:53".
+  var headerDateRe = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\s*\d{0,2}:\d{2}/i;
+  var monthDayRe = /\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{1,2}\b/i;
+
   var dateIdx = -1;
   for (var i = 0; i < rawLines.length; i++) {
-    if (monthRe.test(rawLines[i])) { dateIdx = i; break; }
+    if (headerDateRe.test(rawLines[i])) { dateIdx = i; break; }
   }
+  // Fallback: if no month+time header line, use the first plain month+day line that
+  // is NOT a chart row (guards against picking the chart axis).
+  if (dateIdx === -1) {
+    for (var i2 = 0; i2 < rawLines.length; i2++) {
+      if (monthDayRe.test(rawLines[i2]) && !isChartRow(rawLines[i2])) { dateIdx = i2; break; }
+    }
+  }
+
   var candLines = [];
   if (dateIdx !== -1) {
     for (var j = dateIdx + 1; j <= dateIdx + 2 && j < rawLines.length; j++) {
       if (/%/.test(rawLines[j])) break;
+      if (isChartRow(rawLines[j])) continue;   // skip chart data rows
       candLines.push(rawLines[j]);
     }
   }
-  // Also allow any explicit "kg" line that isn't the goal, as a secondary source.
+  // Also allow any explicit "kg" line that isn't the goal or a chart row.
   for (var k = 0; k < rawLines.length; k++) {
-    if (/goal/i.test(rawLines[k]) || /%/.test(rawLines[k])) continue;
+    if (/goal/i.test(rawLines[k]) || /%/.test(rawLines[k]) || isChartRow(rawLines[k])) continue;
     if (/k\s*g/i.test(rawLines[k])) candLines.push(rawLines[k]);
   }
 
