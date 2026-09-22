@@ -403,19 +403,20 @@ var MEAL_SLOTS = [
   {
     id: 'breakfast', name: 'Breakfast', time: '6:30 AM', target: 330,
     fixedItems: [
-      { name: 'Coffee', qty: '100ml milk + 5g sugar', kcal: 70, p: 3, c: 10, f: 2 }
+      { name: 'Coffee', qty: '75ml milk + 5g sugar', kcal: 55, p: 2, c: 8, f: 2 }
     ],
     options: [
       { id: 'A', name: 'Muesli + milk', anchor: true,
-        qty: "35g Kellogg's Delightful Fruit Muesli + 200ml milk",
-        kcal: 261, p: 9, c: 36, f: 8,
+        qty: "30g Kellogg's Delightful Fruit Muesli + 150ml milk",
+        kcal: 210, p: 7, c: 28, f: 6,
         note: 'Take CoQ10 tablets with this meal.',
         recipe: 'Pour milk over muesli. Let sit 1-2 min. Eat with coffee.' },
       { id: 'B', name: 'Oats + milk',
         qty: '50g rolled oats + 200ml milk',
         kcal: 270, p: 11, c: 40, f: 7,
-        note: 'Recipe to be explored and finalised.',
-        recipe: '' },
+        recipe: 'Add oats to 200ml milk in a pan. Cook on medium heat '
+          + '3-4 min, stirring. Slightly thick and warm. '
+          + 'Add a pinch of salt or cardamom if you like.' },
       { id: 'C', name: 'Bread + jam',
         qty: '2 slices whole wheat bread + 10g jam',
         kcal: 220, p: 6, c: 42, f: 2,
@@ -440,9 +441,11 @@ var MEAL_SLOTS = [
     id: 'snackAM', name: 'Snack AM', time: '10:30 AM', target: 150,
     options: [
       { id: 'A', name: 'Fruit', anchor: true,
-        qty: '200g mixed fresh fruit (banana/apple/papaya/watermelon)',
-        kcal: 120, p: 1, c: 30, f: 0, recipe: '' },
-
+        qty: '150g mixed fresh fruit (banana/apple/papaya/watermelon)',
+        kcal: 90, p: 1, c: 22, f: 0, recipe: '' },
+      { id: 'B', name: 'Fruit + curd',
+        qty: '150g fruit + 100g curd',
+        kcal: 155, p: 5, c: 27, f: 3, recipe: '' },
       { id: 'C', name: 'Mixed nuts',
         qty: '20g mixed nuts (almonds/walnuts)',
         kcal: 130, p: 3, c: 4, f: 12, recipe: '' },
@@ -460,8 +463,8 @@ var MEAL_SLOTS = [
     id: 'lunch', name: 'Lunch', time: '12:00-1:00 PM', target: 470,
     options: [
       { id: 'A', name: 'Chicken', anchor: true,
-        qty: '150g raw chicken breast + 200g veg + 50g dry rice + 5g oil',
-        kcal: 470, p: 43, c: 42, f: 8,
+        qty: '150g raw chicken breast + 200g veg + 40g dry rice + 5g oil',
+        kcal: 435, p: 41, c: 34, f: 8,
         recipe: 'Cook chicken your preferred style (curry, pepper dry, '
           + 'stir fry, do pyaza, keema, jeera). '
           + 'Pack rice + veg + chicken in dabba.' },
@@ -501,7 +504,7 @@ var MEAL_SLOTS = [
   {
     id: 'snackPM', name: 'Evening snack', time: '5:30-6:00 PM', target: 280,
     fixedItems: [
-      { name: 'Coffee', qty: '100ml milk + 5g sugar', kcal: 70, p: 3, c: 10, f: 2 }
+      { name: 'Coffee', qty: '75ml milk + 5g sugar', kcal: 55, p: 2, c: 8, f: 2 }
     ],
     note: 'Make this substantial enough that Maggi and mixture '
       + 'feel unnecessary.',
@@ -544,9 +547,9 @@ var MEAL_SLOTS = [
     id: 'dinner', name: 'Dinner', time: '7:30 PM', target: 430,
     options: [
       { id: 'A', name: 'Chicken curry + chapati + curd', anchor: true,
-        qty: '150g chicken + 200g veg + 50g wheat flour chapati '
+        qty: '100g chicken + 200g veg + 40g wheat flour chapati '
           + '+ 100g curd + 5g oil',
-        kcal: 460, p: 48, c: 42, f: 11,
+        kcal: 360, p: 35, c: 36, f: 9,
         recipe: 'Chicken curry/stir-fry. Make chapati (2 medium). '
           + 'Curd on side.' },
       { id: 'B', name: 'Egg bhurji + chapati + curd',
